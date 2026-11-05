@@ -1,0 +1,15 @@
+name = "PeanoContinua"
+version = "0.1.0"
+defaultTargets = ["Peano"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+# Brazas–Pavešić, countable models of one-dimensional Peano continua (notes in `notes/`).
+[[lean_lib]]
+name = "Peano"
