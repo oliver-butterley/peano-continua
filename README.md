@@ -3,7 +3,7 @@
 
 ⚠️ This paragraph is the only part of this entire repo which was contributed by a human. 
 All other content was added by AI as a quick experiment during a discussion. 
-There was not even an attempt (so far) to review any of the material produced.
+So far no human has even reviewed any of the material produced.
 
 
 

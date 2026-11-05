@@ -19,10 +19,10 @@ which the space is not semilocally simply connected) agree for metric spaces. Th
 | `exists_homotopyEquiv_finiteGraph` | Meilstrup 2005, **Cor 2.10** (`B(X) = ∅` ⇒ homotopy equivalent to a bouquet of finitely many, possibly zero, circles); also Brazas–Pavešić arXiv:2510.22901 Thm 3.9, Cor 3.3 | a one-dimensional Peano continuum with empty (loop) wild set is homotopy equivalent to a finite graph (an `ArcSystem` with finite `W` and finitely many arcs) | Theorem 1.1 "if", case `w = ∅` | 2026-11-05: true, literal |
 | `eda_exists_map_earring` | paper Thm 6.1, Eda 2002 Thm 1.1 (inspected 2026-11-05: target any one-dimensional metric space; same earring; same base-change convention) | a homomorphism `π₁(𝔼) → π₁(X)`, `X` a one-dimensional Peano continuum, agrees on the generators `[ℓₖ]` with `φ_α ∘ g#` for a map `g` and a path `α` | Lemma 6.4, Theorem 1.1 | 2026-11-05: confirmed against Eda's text; a special case of it |
 | `exists_nhds_monodromy` | Brazas–Fischer arXiv:1902.08887v2, Prop 9.13 + Remark 9.4(a) + Lemma 9.5 (`H = 1`) | for a path `β` between distinct points of a path-connected one-dimensional metric space there are neighbourhoods `U ∋ x`, `V ∋ y` with `π(c_x, U) ∩ π(β, V) = 1` | Lemma 6.2 (derived), Lemma 6.4, Theorem 1.1, Brazas–Fischer Thm 9.15 (derived), Theorem 1.2 | 2026-11-05: true, literal (what the proof of 9.13(b) shows) |
-| `eda_homotopyEquiv_of_homeomorph` | paper Thm 6.6, Eda 2022 (abstract; text not inspected) | one-dimensional Peano continua with homeomorphic **non-empty** zero-dimensional (loop) wild sets are homotopy equivalent | Theorem 1.2 (well-definedness) | 2026-11-05: true with "non-empty" (the paper omits it) |
-| `exists_reduced_homotopy`, `isReparam_of_reduced_homotopic` | paper Remark 2.7, Cannon–Conner 2006 Thm 3.9 (checked against Constantine–Lafont arXiv:1209.3709 Thm 2.10) | in a compact path-connected one-dimensional metric space every loop is homotopic, inside its image, to a reduced loop, unique up to increasing reparametrisation | Part A only (Lemma 2.8, Lemma 3.3) | 2026-11-05: true, scope narrower than the paper |
+| `eda_homotopyEquiv_of_homeomorph` | paper Thm 6.6, Eda 2022 Thm 1.1 (checked 2026-11-05 against the 2020 preprint `papers/0dim.pdf`, l.47–50) | one-dimensional Peano continua with homeomorphic **non-empty** zero-dimensional (loop) wild sets are homotopy equivalent | Theorem 1.2 (well-definedness) | 2026-11-05: confirmed against Eda's text; "non-empty" is in his Theorem 1.1 (the paper omits it) |
+| `exists_reduced_homotopy`, `isReparam_of_reduced_homotopic` | paper Remark 2.7, Cannon–Conner 2006 Thm 3.9 (inspected 2026-11-05; standing hypotheses compact, path-connected, one-dimensional metric; the image condition is in the proof, and explicit in Constantine–Lafont Thm 2.10) | in a compact path-connected one-dimensional metric space every loop is homotopic, inside its image, to a reduced loop, unique up to increasing reparametrisation | Part A only (Lemma 2.8, Lemma 3.3) | 2026-11-05: confirmed against Cannon–Conner's text; the paper's Remark 2.7 overstates the scope ("metrizable"), though the metrizable form follows by working in compact images |
 | `eda_zeroForm` | paper Lemma 3.2, Eda 2016 Lemma 3.6 (inspected 2026-11-05, `papers/fm232-2-01.pdf`; Eda's setting: one-dimensional metric spaces, so the Peano-continuum scope here is stricter), with Hurewicz | direction "⇒" only: a null-homologous essential loop in a one-dimensional Peano continuum has a reduced representative that is a 0-form ("⇐" is proved: `fromPath_mem_commutator_of_isZeroFormCut`) | Part A only (Lemmas 3.3, 3.4, 6.3, general 3.3, `injOn_wildSet_of_paper`) | 2026-11-05: confirmed against Eda's text (Def 3.4, Lemma 3.6; `≡` = up to increasing homeomorphism, as encoded) |
-| `exists_simpleClosedCurve` | arXiv:2510.22901 Cor 3.3 and the fact before Def 3.5 | a path-connected one-dimensional metric space with an essential loop contains a simple closed curve | Part A only (Lemma 6.3) | 2026-11-05: true |
+| `exists_simpleClosedCurve` | arXiv:2510.22901 Cor 3.3 and the fact before Def 3.5; also Cannon–Conner Def 3.6 + dendrites contractible (no dimension hypothesis needed) | a path-connected one-dimensional metric space with an essential loop contains a simple closed curve | Part A only (Lemma 6.3) | 2026-11-05: confirmed (two sources) |
 
 ## Standard facts (`Peano/Axioms/Standard.lean`)
 
@@ -46,7 +46,7 @@ which the space is not semilocally simply connected) agree for metric spaces. Th
 - **Theorem 6.1** is assumed on the generators `[ℓₖ]` only and for Peano continua only.
 - **Lemma 6.2** is not an axiom: it is derived from the discrete-monodromy consequence of
   Brazas–Fischer Prop. 9.13, which is what that proposition actually gives (the paper mis-cites it).
-- **Theorem 6.6** has "non-empty" added (it is in Eda's abstract).
+- **Theorem 6.6** has "non-empty" added (it is in Eda's Theorem 1.1; the preprint's abstract omits it).
 - **Brazas–Fischer Thm 9.15** is not assumed: it is proved from the discrete-monodromy consequence of their Prop. 9.13.
 - **The zero-form lemma** is assumed in the direction "⇒" only; "⇐" is proved.
 
@@ -67,3 +67,25 @@ which the space is not semilocally simply connected) agree for metric spaces. Th
   (Thm 2.9 and Cor 2.10). They could be merged into one axiom citing the thesis.
 - **Reduced loops.** The thesis's Lemma 2.1 restates Cannon–Conner's reduced loops for
   one-dimensional Peano continua, citing Cannon–Conner.
+
+## Notes from reading the cited papers (2026-11-05)
+
+All cited sources have now been read (Meilstrup 2005, Eda 2002, 2016, 2022 (2020 preprint),
+Cannon–Conner 2006, Brazas–Fischer 2020). Every cited axiom is confirmed against its source; no
+statement changed. Findings:
+- **Paper misquotes, confirmed against the sources:**
+  - Theorem 4.2 omits Meilstrup's "`B(X) ≠ ∅`".
+  - Theorem 6.6 omits Eda's "non-empty". The 2020 preprint's abstract also omits it, a plausible
+    origin of the slip.
+  - Definition 3.1 asks for exact equality of paired pieces, where Eda's Definition 3.4 has `≡`
+    (equality up to an increasing homeomorphism).
+  - Remark 2.7 states Cannon–Conner Theorem 3.9 for metrizable spaces; Cannon–Conner assume compact
+    path-connected spaces. The metrizable form is still true.
+  - Lemma 6.2 cites Brazas–Fischer Prop 9.13 for a consequence of it.
+- **Scopes of our axioms, narrower than the sources:**
+  - Eda 2002 Theorem 1.1 allows any one-dimensional metric target. By Eda's Lemma 3.15, our
+    generator form is equivalent to the full theorem.
+  - Eda 2016 Lemma 3.6 holds for one-dimensional metric spaces. Cannon–Conner Theorem 6.1 is a second
+    source for the zero-form lemma, for one-dimensional Hausdorff spaces.
+- **Not derivable from Cannon–Conner:** the monodromy axiom, which rests on Brazas–Fischer and their
+  earlier Lemma 3.11 (J. Topol. Anal. 2020).

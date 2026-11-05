@@ -100,16 +100,19 @@ axiom exists_nhds_monodromy (X : Type) [MetricSpace X] [PathConnectedSpace X]
       Set.range δ ⊆ V → γ.Homotopic ((β.trans δ).trans β.symm) → γ.Homotopic (Path.refl x)
 
 /-- **Theorem 6.6** of the paper, from Eda, *One-dimensional Peano continua with zero-dimensional
-wild part*, Fund. Math. 259 (2022) 243–253 (abstract): for one-dimensional Peano continua whose wild
-parts are zero-dimensional **and non-empty**, homeomorphic wild parts imply homotopy equivalence.
+wild part*, Fund. Math. 259 (2022) 243–253, Theorem 1.1 (checked against the 2020 preprint,
+`papers/0dim.pdf`, l.47–50): for one-dimensional Peano continua whose wild parts are
+zero-dimensional **and non-empty**, homeomorphic wild parts imply homotopy equivalence.
 
-The hypothesis "non-empty" is in Eda's abstract and missing from the paper's quotation; without it
-the statement is false (a point and a circle). Only the direction "homeomorphic wild parts ⇒
+The hypothesis "non-empty" is in Eda's Theorem 1.1 and published abstract and missing from the
+paper's quotation (the preprint's abstract also omits it, a plausible source of the slip); without
+it the statement is false (a point and a circle). Only the direction "homeomorphic wild parts ⇒
 homotopy equivalent" is assumed (the converse is Brazas–Fischer Thm 9.15, proved in
 `Peano.BrazasFischer`). Eda's wild part is the set of points at which `X` is not semilocally simply
-connected, which for locally path-connected spaces is `loopWildSet`. Zero-dimensional is Mathlib's `ZeroDimensionalSpace` (a basis of clopen
-sets), equivalent for compact metric spaces to covering dimension `0`. Eda's full text was not
-inspected. Used for injectivity in the corrected Theorem 1.2. -/
+connected, which is exactly `loopWildSet`. Zero-dimensional is Mathlib's `ZeroDimensionalSpace`
+(a basis of clopen sets), equivalent for compact metric spaces to covering dimension `0`; Eda uses
+clopen partitions. The converse direction is Eda's Remark 1.2. Used for injectivity in the
+corrected Theorem 1.2. -/
 axiom eda_homotopyEquiv_of_homeomorph (X Y : Type) [MetricSpace X] [CompactSpace X]
     [ConnectedSpace X] [LocallyPathConnectedSpace X] [MetricSpace Y] [CompactSpace Y]
     [ConnectedSpace Y] [LocallyPathConnectedSpace Y] (hX : CoveringDimLE 1 X)
@@ -120,9 +123,12 @@ axiom eda_homotopyEquiv_of_homeomorph (X Y : Type) [MetricSpace X] [CompactSpace
 /-! ### Inputs of Part A (§2–3); used only by the paper's own route to Lemma 6.4 -/
 
 /-- **Remark 2.7**, existence half, from Cannon–Conner, *On the fundamental groups of
-one-dimensional spaces*, Topology Appl. 153 (2006), Theorem 3.9 (checked against the restatement in
-Constantine–Lafont, arXiv:1209.3709, Thm 2.10, for compact path-connected one-dimensional metric
-spaces; Cannon–Conner's text was not inspected): every loop is homotopic rel end points to a reduced
+one-dimensional spaces*, Topology Appl. 153 (2006), Theorem 3.9 (inspected 2026-11-05,
+`papers/1-s2.0-S0166864105002907-main.pdf`: stated under the standing hypotheses of their §3.2,
+compact, path-connected, one-dimensional metric, l.246; "reduced" as in their Definition 3.8; the
+image condition comes from their proof, l.312 and l.322, and Corollary 3.2, and is explicit in the
+restatement of Constantine–Lafont, arXiv:1209.3709, Thm 2.10; the paper's Remark 2.7 overstates the
+scope as "metrizable"): every loop is homotopic rel end points to a reduced
 loop by a homotopy whose image lies in the image of the loop. Assumed only for compact
 path-connected spaces, the restatement's scope. -/
 axiom exists_reduced_homotopy (X : Type) [MetricSpace X] [CompactSpace X] [PathConnectedSpace X]
@@ -162,7 +168,9 @@ contains a simple closed curve (an injective image of the circle). Source: Braza
 arXiv:2510.22901, Corollary 3.3 (a path-connected one-dimensional Hausdorff space is simply
 connected iff it is uniquely arcwise connected) with the fact quoted there before Definition 3.5
 (a path-connected Hausdorff space is uniquely arcwise connected iff it contains no simple closed
-curve). -/
+curve). Alternative source: Cannon–Conner 2006, Definition 3.6 and l.261 (a Peano continuum with no
+simple closed curve is a dendrite, and dendrites are contractible), applied to the image of the
+loop; this shows the dimension hypothesis is not needed. -/
 axiom exists_simpleClosedCurve (X : Type) [MetricSpace X] [PathConnectedSpace X]
     (hX : CoveringDimLE 1 X) {x : X} (α : Path x x) (hα : ¬ α.Homotopic (Path.refl x)) :
     ∃ c : C(AddCircle (1 : ℝ), X), Function.Injective c

@@ -130,11 +130,11 @@ machine-checked from the standard axioms. Every repaired proof went through in L
 
 **Trust boundary.** Ten axioms in all (`axioms.md`): nine cited results and one textbook fact of
 dimension theory. Theorem 1.1 rests on four cited results; the corrected Theorem 1.2 on Brazas–Fischer's
-discrete monodromy and Eda 2022 (injectivity) and the dimension fact (surjectivity). Sources not inspected:
-Meilstrup's thesis (checked against the restatement in arXiv:2510.22901 Thm 3.10), Eda 2002 (checked
-against Kent arXiv:1305.4215), Eda 2016 and Eda 2022 (abstract only; the source of "non-empty"),
-Cannon–Conner 2006 (checked against Constantine–Lafont arXiv:1209.3709). Copies of the accessible
-sources are in `papers/`.
+discrete monodromy and Eda 2022 (injectivity) and the dimension fact (surjectivity). Every cited source
+has been read (2026-11-05) and every cited axiom confirmed against it: Meilstrup's thesis, Eda 2002,
+2016 and 2022 (preprint), Cannon–Conner 2006, Brazas–Fischer 2020, Brazas–Pavešić arXiv:2510.22901.
+See the end of `axioms.md` for the findings, including two further misquotes in the paper (Definition
+3.1 vs Eda's `≡`; the scope of Remark 2.7). Copies are in `papers/`.
 
 **A misleading claim in `checks/C.md`.** It says Lemma 4.5 is false. That checker read the text
 extraction, which drops the closure bars; with closures the lemma is true and proved in Lean.
