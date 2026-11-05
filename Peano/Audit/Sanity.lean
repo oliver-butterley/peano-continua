@@ -9,7 +9,9 @@ Prints the axioms of the sanity theorems of `Peano.Sanity`: weak homotopy equiva
 trivial notion, the earring has wild set `{b₀}`, Theorem 1.1 has instances with non-empty wild
 set, the paper's canonical correspondence of Theorem 1.2 is not a bijection (the point and the
 circle; the circle and an arc, both of dimension exactly one), and `CoveringDimLE` is not trivial
-(the unit interval is not zero-dimensional). Also restates Remark 6.5 (`Peano.Remark6_5`): the
+(the unit interval is not zero-dimensional), and the "only if" direction of Theorem 1.1 has an
+instance (a continuum with uncountable wild set and no countable weak model).
+Also restates Remark 6.5 (`Peano.Remark6_5`): the
 injection of Lemma 6.4 need not be a bijection.
 
 Expected axioms:
@@ -17,10 +19,16 @@ Expected axioms:
 * `wildSet_earring`: the standard three only;
 * `not_coveringDimLE_zero_unitInterval`, `earringCircle_zero_finite_weq`: the standard three only;
 * `exists_countable_weq_of_wildSet_nonempty`: those of Theorem 1.1 ("if" direction:
-  `exists_homotopyEquiv_standardForm`, `exists_homotopyEquiv_finiteGraph`,
-  `eda_exists_map_earring`, `exists_nhds_monodromy`) and `coveringDimLE_one_of_interior_eq_empty`;
+  `exists_homotopyEquiv_arcReduced`, `eda_exists_map_earring`, `exists_nhds_monodromy`) only;
 * `thm1_2_counterexample`, `thm1_2_counterexample_dim_one`,
-  `not_forall_nonempty_homotopyEquiv_iff_wildSet`: `coveringDimLE_one_of_interior_eq_empty`.
+  `not_forall_nonempty_homotopyEquiv_iff_wildSet`: the standard three only (one-dimensionality is
+  proved, `Peano.Dimension`);
+* `exists_peano_wildSet_not_countable` (a one-dimensional Peano continuum with uncountable wild
+  set): the standard three only;
+* `exists_no_countable_model` (hence no countable weak model): those of the "only if" direction
+  of Theorem 1.1 (`eda_exists_map_earring`, `exists_nhds_monodromy`) and, since it goes through the
+  equivalence `exists_countable_weq_iff`, also `exists_homotopyEquiv_arcReduced`;
+* `coveringDimLE_one_of_finite_frontier`, `ModelData.coveringDimLE_model`: the standard three only.
 -/
 
 open Peano unitInterval
@@ -55,3 +63,22 @@ recall Peano.Sanity.not_coveringDimLE_zero_unitInterval : ¬ CoveringDimLE 0 I
 #check @Peano.Sanity.not_coveringDimLE_zero
 #print axioms Peano.Sanity.not_coveringDimLE_zero
 #print axioms Peano.Sanity.thm1_2_counterexample_dim_one
+
+-- An instance of the "only if" direction of Theorem 1.1: uncountable wild set, no countable model.
+recall Peano.Sanity.exists_peano_wildSet_not_countable :
+    ∃ (X : Type) (_ : MetricSpace X) (_ : CompactSpace X) (_ : ConnectedSpace X)
+      (_ : LocallyPathConnectedSpace X), CoveringDimLE 1 X ∧ ¬ (wildSet X).Countable
+
+recall Peano.Sanity.exists_no_countable_model :
+    ∃ (X : Type) (_ : MetricSpace X) (_ : CompactSpace X) (_ : ConnectedSpace X)
+      (_ : LocallyPathConnectedSpace X), CoveringDimLE 1 X ∧ ¬ (wildSet X).Countable ∧
+        ¬ ∃ (Y : Type) (_ : TopologicalSpace Y), Countable Y ∧
+          ∃ f : C(X, Y), IsWeakHomotopyEquivalence f
+
+#print axioms Peano.Sanity.exists_peano_wildSet_not_countable
+#print axioms Peano.Sanity.exists_no_countable_model
+
+-- One-dimensionality without axioms (`Peano.Dimension`).
+#check @Peano.coveringDimLE_one_of_finite_frontier
+#print axioms Peano.coveringDimLE_one_of_finite_frontier
+#print axioms Peano.ModelData.coveringDimLE_model

@@ -10,15 +10,18 @@ homotopy equivalence to a countable space iff its wild set `w(X)` is countable.
 
 Both directions are proved:
 
-* "if": `Peano.exists_countable_weq` (`Peano.Main`): Meilstrup's standard form (Theorem 4.2, cited),
-  Lemmas 2.5 and 6.4 to keep `w` countable, the coarsification (Corollary 5.6); and, for
-  `w(X) = ∅` (a case the paper misses), a finite graph (cited) and its finite coarsification.
+* "if": `Peano.exists_countable_weq` (`Peano.Main`): Meilstrup's arc-reduced form (cited axiom
+  `exists_homotopyEquiv_arcReduced`, thesis Theorem 2.9 and Corollary 2.10) gives the standard form
+  (Theorem 4.2), then Lemmas 2.5 and 6.4 keep `w` countable and the coarsification (Corollary 5.6)
+  applies; for `w(X) = ∅` (a case the paper misses) it gives a finite graph and its finite
+  coarsification.
 * "only if": `Peano.countable_wildSet_of_weq` (`Peano.OnlyIf`), from Lemma 6.4.
 
 Lemma 6.4 (`Peano.injOn_wildSet`) is proved in `Peano.OnlyIf` by a homology-free argument from
 Theorem 6.1 (Eda, cited) and Lemma 6.2 (from the cited discrete monodromy of Brazas–Fischer). The
 paper's own proof of Lemma 6.4, through first homology (Part A: Lemmas 2.8, 3.3, 3.4, 6.3, in
-`Peano.Homology` and `Peano.PartA`), is formalised separately in `Peano.Lemma6_4Paper`
+`PeanoPartA.Homology` and `PeanoPartA.Lemmas`), is formalised separately in
+`PeanoPartA.Lemma6_4Paper`
 (`Peano.injOn_wildSet_of_paper`) and is not used here. The axioms used are listed in
 `Peano/Audit/Thm1_1.lean`. The wild set may equivalently be taken in the loop sense of the
 introduction (`exists_countable_weq_iff_loopWildSet`).

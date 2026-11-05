@@ -42,7 +42,8 @@ builds them too.
   Sierpiński carpet is a counterexample. Nothing uses it.
 
 **Gaps and errors in proofs, all repairable** (the statements are true)
-- Lemma 3.3: the case of several path components is unproved (A).
+- Lemma 3.3: the case of several path components is unproved (A). The Lean version covers it
+  (`singularHomologyMap_val_injective`, any `A`).
 - Lemma 3.4: several defects, though a two-line proof exists (A).
 - Lemma 4.3: the final contradiction does not follow; three-point repair (B).
 - Lemma 4.5: the compactness step is circular; repaired with Lemma 4.3 and condition (3) (B).
@@ -83,12 +84,14 @@ in `Peano/`. `lean-map.md` maps every result to its Lean declaration; `axioms.md
 - **Theorem 1.2, corrected** (non-empty wild sets): `X ↦ w(X)` is a bijection from homotopy types of
   one-dimensional Peano continua with non-empty countable wild set onto homeomorphism types of
   non-empty countable compact metric spaces (`Peano/Thm1_2.lean`). Surjectivity is a full planar
-  construction of the models (`Peano/Models.lean`); one-dimensionality of the models uses the
-  textbook axiom "a compact planar set with empty interior has dimension ≤ 1". The paper's
+  construction of the models (`Peano/Models.lean`); their one-dimensionality is proved
+  (`coveringDimLE_one_of_finite_frontier`, `Peano/Dimension.lean`), with no axiom. The paper's
   statement is formally refuted (`Peano.Sanity.thm1_2_counterexample`: the point and the circle).
 - **Part A (§2–3)**: Lemmas 2.5, 2.8, 3.3 (for the path component of the base point; the general
   case in `Peano/Lemma3_3General.lean`), 3.4 (without the reducedness hypothesis), 6.3; `H₁` of a
-  path-connected space is modelled by the abelianised `π₁` (Hurewicz). Cited: Cannon–Conner
+  path-connected space is the genuine singular homology group, via Tau Ceti's degree-one Hurewicz
+  theorem, with the abelianised `π₁` as the working model; Lemma 3.3 holds as the paper states it,
+  for arbitrary `A` (`singularHomologyMap_val_injective`). Cited: Cannon–Conner
   (reduced loops), Eda's zero-form lemma, simple closed curves. Lemmas 3.3, 3.4, 6.3 are proved for
   one-dimensional Peano continua (the paper says metrizable spaces), the scope of Eda's lemma.
 - **Former axioms now proved**: Brazas–Fischer Thm 9.15 (from their discrete-monodromy
@@ -128,9 +131,10 @@ in `Peano/`. `lean-map.md` maps every result to its Lean declaration; `axioms.md
 is false as stated and true for non-empty wild sets. The new technical core (§5) is correct and is
 machine-checked from the standard axioms. Every repaired proof went through in Lean.
 
-**Trust boundary.** Ten axioms in all (`axioms.md`): nine cited results and one textbook fact of
-dimension theory. Theorem 1.1 rests on four cited results; the corrected Theorem 1.2 on Brazas–Fischer's
-discrete monodromy and Eda 2022 (injectivity) and the dimension fact (surjectivity). Every cited source
+**Trust boundary.** Eight axioms in all (`axioms.md`), all cited results: four in the main library
+`Peano`, four more in `PeanoPartA`. Theorem 1.1 rests on three (Meilstrup, Eda 2002, Brazas–Fischer's
+discrete monodromy); the corrected Theorem 1.2 on Brazas–Fischer's discrete monodromy and Eda 2022
+(injectivity), its surjectivity on none. Every cited source
 has been read (2026-11-05) and every cited axiom confirmed against it: Meilstrup's thesis, Eda 2002,
 2016 and 2022 (preprint), Cannon–Conner 2006, Brazas–Fischer 2020, Brazas–Pavešić arXiv:2510.22901.
 See the end of `axioms.md` for the findings, including two further misquotes in the paper (Definition
@@ -152,29 +156,23 @@ proof depended on it.
 - `Peano/Audit/Defs.lean` prints every definition the main statements use; `recall` only freezes
   theorem statements.
 
-## Possible dependency: Tau Ceti (checked 2026-11-05)
+## Dependency: Tau Ceti
 
 Tau Ceti (github.com/TauCetiProject/TauCeti) is the Lean FRO's library of AI-formalised mathematics,
-downstream of Mathlib. Depending on it is worthwhile **only if** it stays cheap: import a few
-specific modules, so that Lake builds only their small closure, or use its published cache. Never
-build the whole library: about 26,000 files, hours from source.
+downstream of Mathlib. Since 2026-11-05 this project depends on it, pinned to commit `83b84968`, with
+Mathlib at that commit's own revision (`1b1ccf4b`) and Lean `v4.36.0-rc2`. Condition for keeping the
+dependency: it must stay cheap. Only a few specific modules are imported, and Lake builds just their
+import closure; never the whole library (about 26,000 files, hours from source).
 
-- **What would be used.**
-  - Hurewicz in degree one, `π₁(X, x)^ab ≅ H₁(X; ℤ)` (`TauCeti.AlgebraicTopology.Homotopy.Hurewicz.One.*`).
-    It would replace the abelianised-`π₁` model of `H₁` in Part A by genuine singular homology, and is
-    the bridge a proof of the zero-form lemma would need.
-  - Possibly its weak-homotopy-equivalence API
-    (`TauCeti.Topology.Homotopy.HomotopyGroup.WeakHomotopyEquivalence`), which duplicates
-    `Peano/HomotopyEquiv.lean`.
-  - Its Jordan-curve files (`TauCeti.Topology.JordanCurve.*`), which recognise simple closed curves
-    traced by paths.
-  - None of the ten axioms is discharged by Tau Ceti.
-- **Cost measured on commit 482d8ed1.** The import closure of `Hurewicz.One.Basic` is 20 Tau Ceti
-  modules, about 4,600 lines; with `Naturality`, 28 modules, about 7,000 lines. That is minutes to
-  build from source after `lake exe cache get` for Mathlib. Tau Ceti also publishes an olean cache
-  (`scripts/lake-cache-get.sh`, through `uvx`), which misses after a toolchain bump.
-- **Constraint.** Tau Ceti uses `leanprover/lean4:v4.36.0-rc2` and Mathlib `master`. A dependency
-  means pinning one Tau Ceti commit and moving this repository to exactly its Mathlib revision. A
-  Mathlib bump is acceptable for this project. Alternative: port the few needed files, which the
-  Apache-2.0 licence allows with attribution.
-
+- **Used:** Hurewicz in degree one, `π₁(X, x)^ab ≅ H₁(X; ℤ)`
+  (`TauCeti.AlgebraicTopology.Homotopy.Hurewicz.One.*`), so that Part A states its results with
+  genuine singular homology.
+- **Measured cost:** the import closure of `Hurewicz.One.Naturality` (28 Tau Ceti modules, about
+  7,000 lines) built from source in 9 seconds wall-clock after `lake exe cache get`. Cloning the
+  repository takes about 460 MB under `.lake/packages`.
+- **Bumping:** move the Tau Ceti commit and the Mathlib commit together. The Mathlib commit must be
+  the one in that Tau Ceti commit's `lake-manifest.json`, and `lean-toolchain` must match.
+- **Fragility.** `PeanoPartA/SingularH1Generators.lean` re-implements Tau Ceti's private
+  per-component generation argument through its low-level public singular-chain API, so a Tau Ceti
+  bump may break it; the fix would be to upstream a per-component generation lemma to Tau Ceti.
+- **Not used:** none of the axioms is discharged by Tau Ceti.

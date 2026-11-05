@@ -2,7 +2,6 @@ module
 
 public import Peano.Defs
 public import Peano.LoopWildSet
-public import Peano.Reduced
 public import Peano.Earring
 public import Peano.Arcs
 public import Peano.StandardForm
@@ -18,14 +17,11 @@ public import Peano.EarringOps
 public import Peano.OnlyIf
 public import Peano.BrazasFischer
 public import Peano.Thm1_1
+public import Peano.Dimension
 public import Peano.LocJoin
 public import Peano.PlaneGeometry
 public import Peano.Models
 public import Peano.Sanity
-public import Peano.Homology
-public import Peano.PartA
-public import Peano.Lemma6_4Paper
-public import Peano.Lemma3_3General
 public import Peano.Remark6_5
 
 /-!
@@ -42,8 +38,8 @@ Formalisation of Brazas–Pavešić, *Countable models of one-dimensional Peano 
   `Peano.OnlyIf`;
 * Brazas–Fischer Theorem 9.15 (homotopy equivalences restrict to homeomorphisms of wild sets),
   proved from the cited discrete-monodromy property (`Peano.BrazasFischer`);
-* Part A (§2–§3: Lemmas 2.8, 3.3, 3.4) and Lemma 6.3 (`Peano.Homology`, `Peano.PartA`), and the
-  paper's own proof of Lemma 6.4 through them (`Peano.Lemma6_4Paper`);
+* Part A (§2–§3: Lemmas 2.8, 3.3, 3.4) and Lemma 6.3 (`PeanoPartA.Homology`, `PeanoPartA.Lemmas`), and the
+  paper's own proof of Lemma 6.4 through them (`PeanoPartA.Lemma6_4Paper`);
 * Theorem 1.2, corrected (non-empty wild sets; `Peano.Thm1_2`), with the planar models of
   `Peano.Models`; Remark 6.5 (`Peano.Remark6_5`); sanity checks and the counterexample to
   Theorem 1.2 as stated (`Peano.Sanity`).

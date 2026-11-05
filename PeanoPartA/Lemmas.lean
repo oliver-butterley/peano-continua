@@ -1,19 +1,24 @@
 module
 
-public import Peano.Homology
+public import PeanoPartA.Homology
 public import Peano.Earring
 public import Peano.WildSet
 public import Peano.HomotopyEquiv
 public import Peano.Axioms.Cited
+public import PeanoPartA.Axioms
 public import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!
 # Part A: π₁- and H₁-injectivity of subspaces, Lemmas 2.8, 3.3, 3.4 and 6.3
 
 Brazas–Pavešić (arXiv:2610.35875), §2–3 and Lemma 6.3, with the repairs of `notes/checks/A.md`
-and `notes/checks/D.md`. Homology is modelled as in `Peano.Homology`: `[α]_h = 0` means
-`FundamentalGroup.fromPath ⟦α⟧ ∈ commutator (FundamentalGroup X x)`, and `H₁(A) → H₁(X)` is the map
-`Abelianization (π₁(A, a)) → Abelianization (π₁(X, a))` induced by the inclusion.
+and `notes/checks/D.md`. The proofs work in the abelianisation model of `PeanoPartA.Homology`:
+`[α]_h = 0` means `FundamentalGroup.fromPath ⟦α⟧ ∈ commutator (FundamentalGroup X x)`, and
+`H₁(A) → H₁(X)` is the map `Abelianization (π₁(A, a)) → Abelianization (π₁(X, a))` induced by the
+inclusion. The same lemmas with genuine singular homology `H₁(X; ℤ)` (through Tau Ceti's Hurewicz
+theorem), as the paper states them, are corollaries in `PeanoPartA.SingularH1Lemmas`:
+`singularHomologyMap_val_injective` (Lemma 3.3, any `A`), `h1Class_ne_of_disjoint` (Lemma 3.4),
+`exists_earringMap_h1Class_ne_zero` (Lemma 6.3).
 
 **Scope.** The paper states Lemmas 3.3 and 6.3 for one-dimensional metrizable spaces and Lemma 3.4
 for one-dimensional path-connected metrizable spaces. Here they are proved for one-dimensional
@@ -41,7 +46,7 @@ stated for `Type`.
   `H₁(A) → H₁(X)` (Hurewicz). For `A` with several path components `H₁(A)` is a direct sum over the
   components and the statement here covers one summand at a time; the general case (finding
   A-3.3-1 of `notes/checks/A.md`) is `fromPath_mem_commutator_of_sum_eq_zero` in
-  `Peano.Lemma3_3General`, which builds on this file. Proof as in the paper with the repairs of
+  `PeanoPartA.Lemma3_3General`, which builds on this file. Proof as in the paper with the repairs of
   A-3.3-3: an inessential loop in `A` is trivial; otherwise it is essential in `X` (Lemma 2.8),
   `eda_zeroForm` gives a reduced 0-form `ρ` homotopic to it, `ρ` is a reparametrisation of the
   reduced representative of Remark 2.7, whose image lies in the image of the loop, so `ρ` lies in
@@ -220,7 +225,8 @@ theorem fromPath_mem_commutator_of_map_val (X : Type) [MetricSpace X] [CompactSp
 map `π₁(A, a)^ab → π₁(X, a)^ab` induced by the inclusion is injective. For path-connected `A`
 this is injectivity of `H₁(A) → H₁(X)` (Hurewicz); for `A` with several path components it covers
 the summand of `H₁(A)` of the component of `a` only; the general case (finding A-3.3-1) is
-`fromPath_mem_commutator_of_sum_eq_zero` (`Peano.Lemma3_3General`). The paper states Lemma 3.3 for
+`fromPath_mem_commutator_of_sum_eq_zero` (`PeanoPartA.Lemma3_3General`). The paper states Lemma 3.3
+for
 any one-dimensional metrizable space; the restriction to Peano continua (and to `X : Type`) is the
 scope of the axiom `eda_zeroForm`. -/
 theorem abelianization_map_val_injective (X : Type) [MetricSpace X] [CompactSpace X]

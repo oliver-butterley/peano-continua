@@ -12,12 +12,12 @@ Expected axioms (besides `propext`, `Classical.choice`, `Quot.sound`):
 * `exists_countable_weq_of_standardForm`: none.
 * `injOn_wildSet` (Lemma 6.4), `countable_wildSet_of_weq` ("only if"):
   `Peano.eda_exists_map_earring` (Theorem 6.1), `Peano.exists_nhds_monodromy` (Brazas–Fischer).
-* `exists_countable_weq` ("if"): the two above plus `Peano.exists_homotopyEquiv_standardForm`
-  (Theorem 4.2) and `Peano.exists_homotopyEquiv_finiteGraph` (case `w = ∅`).
-* `exists_countable_weq_iff` (Theorem 1.1), `exists_countable_weq_iff_loopWildSet`: the four cited
+* `exists_countable_weq` ("if"): the two above plus `Peano.exists_homotopyEquiv_arcReduced`
+  (Meilstrup's Theorem 2.9 and Corollary 2.10; the paper's Theorem 4.2 and the case `w = ∅`).
+* `exists_countable_weq_iff` (Theorem 1.1), `exists_countable_weq_iff_loopWildSet`: the three cited
   axioms above.
 * `exists_finite_weq_of_loopWildSet_eq_empty` (case `w = ∅`):
-  `Peano.exists_homotopyEquiv_finiteGraph` only.
+  `Peano.exists_homotopyEquiv_arcReduced` only.
 
 `exists_countable_weq_of_standardForm` keeps the hypothesis `CoveringDimLE 1 X` of the paper
 although its proof does not use it (the binder is `_hdim` in `Peano.Main`; `recall` ignores binder

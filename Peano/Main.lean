@@ -22,13 +22,14 @@ layers.
   countable wild set is weakly homotopy equivalent to a countable space (its coarsification). No
   cited axioms: closedness of `w(X)` (Lemma 2.3) is proved (`isClosed_wildSet`, `Peano.WildSet`)
   and gives the arc system with `W = w(X)`.
-* `exists_countable_weq`: the general case. If `w(X) ≠ ∅`: Meilstrup's Theorem 4.2 (cited axiom
-  `exists_homotopyEquiv_standardForm`) gives a homotopy equivalent `X'` in standard form; the
-  homotopy inverse `X' → X` is a weak homotopy equivalence
-  (`HomotopyEquiv.isWeakHomotopyEquivalence`, proved in `Peano.HomotopyEquiv`), so Lemmas 2.5
-  and 6.4 (`mapsTo_wildSet`, `injOn_wildSet`, `Peano.OnlyIf`) keep `w(X')` countable, exactly as in the paper. If `w(X) = ∅` (a case the
-  paper's proof overlooks: Theorem 4.2 does not apply), `X` is homotopy equivalent to a finite
-  graph (cited axiom `exists_homotopyEquiv_finiteGraph`), whose coarsification is a finite model.
+* `exists_countable_weq`: the general case, from Meilstrup's arc-reduced form (cited axiom
+  `exists_homotopyEquiv_arcReduced`, thesis Theorem 2.9 and Corollary 2.10). If `w(X) ≠ ∅`, it
+  gives a homotopy equivalent `X'` in standard form (the paper's Theorem 4.2); the homotopy inverse
+  `X' → X` is a weak homotopy equivalence (`HomotopyEquiv.isWeakHomotopyEquivalence`, proved in
+  `Peano.HomotopyEquiv`), so Lemmas 2.5 and 6.4 (`mapsTo_wildSet`, `injOn_wildSet`,
+  `Peano.OnlyIf`) keep `w(X')` countable, exactly as in the paper. If `w(X) = ∅` (a case the
+  paper's proof overlooks: Theorem 4.2 does not apply), it gives a homotopy equivalent finite graph
+  (a bouquet of finitely many circles), whose coarsification is a finite model.
 
 The "only if" direction is `countable_wildSet_of_weq` in `Peano.OnlyIf`, and the equivalence is
 `exists_countable_weq_iff` in `Peano.Thm1_1`. Brazas–Fischer Theorem 9.15, used for Theorem 1.2,
@@ -132,14 +133,15 @@ theorem ArcSystem.finite_weq_q_of_finite {X : Type*} [MetricSpace X] [CompactSpa
 
 /-- **Theorem 1.1, "if" direction, case `w(X) = ∅`** (missed by the paper), with the wild set
 taken in the loop sense of the cited source (`loopWildSet`). Such a continuum is weakly homotopy
-equivalent to a *finite* space. Uses the cited finite-graph theorem
-(`exists_homotopyEquiv_finiteGraph`). -/
+equivalent to a *finite* space. Uses the case `B(X) = ∅` (Meilstrup's Corollary 2.10) of the
+cited `exists_homotopyEquiv_arcReduced`. -/
 theorem exists_finite_weq_of_loopWildSet_eq_empty (X : Type) [MetricSpace X] [CompactSpace X]
     [ConnectedSpace X] [LocallyPathConnectedSpace X] (hdim : CoveringDimLE 1 X)
     (hw : loopWildSet X = ∅) :
     ∃ (Y : Type) (_ : TopologicalSpace Y), Finite Y ∧
       ∃ f : C(X, Y), IsWeakHomotopyEquivalence f := by
-  obtain ⟨X', _, S, _, hW, hι, ⟨e⟩⟩ := exists_homotopyEquiv_finiteGraph X hdim hw
+  obtain ⟨X', _, _, -, -, -, ⟨e⟩, -, hgraph⟩ := exists_homotopyEquiv_arcReduced X hdim
+  obtain ⟨S, hW, hι⟩ := hgraph hw
   obtain ⟨hfin, hq⟩ := S.finite_weq_q_of_finite hW
   exact ⟨S.Coarse, inferInstance, hfin, S.q.comp e.toFun,
     hq.comp (HomotopyEquiv.isWeakHomotopyEquivalence e)⟩
@@ -147,7 +149,8 @@ theorem exists_finite_weq_of_loopWildSet_eq_empty (X : Type) [MetricSpace X] [Co
 /-- **Theorem 1.1, "if" direction.** A one-dimensional Peano continuum with countable wild set
 admits a weak homotopy equivalence to a countable space.
 
-Two cases. If `w(X) ≠ ∅`, the paper's proof: Meilstrup's standard form `X'` (Theorem 4.2); the
+Two cases, both from Meilstrup's arc-reduced form (`exists_homotopyEquiv_arcReduced`). If
+`w(X) ≠ ∅`, the paper's proof: Meilstrup's standard form `X'` (Theorem 4.2); the
 homotopy inverse `X' → X` maps `w(X')` injectively into `w(X)` (Lemmas 2.5 and 6.4), so `w(X')`
 is countable; then the coarsification of `X'` (Corollary 5.6). If `w(X) = ∅` (missed by the
 paper), `X` is homotopy equivalent to a finite graph and the coarsification of that graph is a
@@ -160,7 +163,9 @@ theorem exists_countable_weq (X : Type) [MetricSpace X] [CompactSpace X] [Connec
   · rw [wildSet_eq_loopWildSet] at hne
     obtain ⟨Y, _, hY, f, hf⟩ := exists_finite_weq_of_loopWildSet_eq_empty X hdim hne
     exact ⟨Y, inferInstance, Finite.to_countable, f, hf⟩
-  obtain ⟨X', _, hc, hconn, hlpc, hdim', hsf, ⟨e⟩⟩ := exists_homotopyEquiv_standardForm X hdim hne
+  rw [wildSet_eq_loopWildSet] at hne
+  obtain ⟨X', _, hc, hconn, hlpc, hdim', ⟨e⟩, hsf, -⟩ := exists_homotopyEquiv_arcReduced X hdim
+  replace hsf := hsf hne
   have hinv := (HomotopyEquiv.isWeakHomotopyEquivalence e.symm).fundamentalGroup_map_bijective
   have hw' : (wildSet X').Countable :=
     (mapsTo_wildSet fun x => (hinv x).1).countable_of_injOn (injOn_wildSet X' hdim' hinv) hw

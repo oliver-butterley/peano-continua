@@ -5,25 +5,17 @@ public import Peano.Defs
 /-!
 # Standard facts missing from Mathlib, assumed as axioms
 
-The trust boundary of the formalisation, part 2 of 2 (part 1: `Peano.Axioms.Cited`). Each axiom
-is a textbook fact that the paper uses without comment and that Mathlib (v4.35.0) does not
-provide; its docstring gives a textbook reference and why it is assumed rather than proved. Facts
-that are cheap to prove are proved instead (for example `IsWeakHomotopyEquivalence.comp`). Audit
-table: `notes/axioms.md`; review: `notes/checks/axioms-review.md`.
+The trust boundary of the formalisation, part 2 of 2 (part 1: `Peano.Axioms.Cited`): textbook
+facts that the paper uses without comment and that Mathlib does not provide. Each axiom's
+docstring would give a textbook reference and why it is assumed rather than proved. Audit table:
+`notes/axioms.md`; review: `notes/checks/axioms-review.md`.
+
+**At present this file contains no axiom.** The last one, `coveringDimLE_one_of_interior_eq_empty`
+(planar compacta with empty interior are at most one-dimensional), was removed: the
+one-dimensionality of the planar spaces of the formalisation (the models of Theorem 1.2, the
+circle, the arc and the earring) is now proved directly, since they are rim-finite
+(`Peano.coveringDimLE_one_of_finite_frontier` in `Peano.Dimension`). The file is kept as the
+designated place for such axioms.
 -/
 
 @[expose] public section
-
-open Topology
-
-namespace Peano
-
-/-- **Planar sets with empty interior are at most one-dimensional** (Hurewicz–Wallman, *Dimension
-Theory*, Theorem IV.3: a subset of `ℝⁿ` has dimension `n` iff it contains a non-empty open subset
-of `ℝⁿ`; and Theorem V.8: for separable metric spaces the covering dimension equals the inductive
-dimension). Assumed because Mathlib has no covering dimension theory. Used to see that the model
-continua `A_K` of Theorem 1.2 are one-dimensional. Stated only for compact sets, the case used. -/
-axiom coveringDimLE_one_of_interior_eq_empty (A : Set (ℝ × ℝ)) (hA : IsCompact A)
-    (hint : interior A = ∅) : CoveringDimLE 1 A
-
-end Peano

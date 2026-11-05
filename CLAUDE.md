@@ -15,10 +15,13 @@ is in `notes/lean-map.md`; the axioms are in `notes/axioms.md`.
   - only the orchestrator runs `lake build`, between waves.
 - Mathlib naming conventions; a docstring on every definition and theorem; a module header that
   states the informal meaning of the file and the design choices behind the encodings.
+- Two libraries: `Peano` (Theorems 1.1 and 1.2 and everything they need) and `PeanoPartA` (§2–3
+  and the paper's own proof of Lemma 6.4). Nothing in `Peano` imports `PeanoPartA`.
 - Axioms live only in `Peano/Axioms/` (`Cited.lean` for results the paper cites, `Standard.lean`
-  for textbook facts missing from Mathlib). Every axiom:
+  for textbook facts missing from Mathlib) and, for Part A only, `PeanoPartA/Axioms.lean`. Every
+  axiom:
   - is listed in `notes/axioms.md`;
-  - is printed by `Peano/Audit/Axioms.lean`;
+  - is printed by `Peano/Audit/Axioms.lean` (or `PeanoPartA/Audit.lean`);
   - gets an adversarial review before anything depends on it.
 - Key statements are restated with `recall` and `#print axioms` in `Peano/Audit/`. A change to a
   frozen statement must be mirrored there.

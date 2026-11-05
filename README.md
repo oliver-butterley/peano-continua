@@ -30,14 +30,21 @@ equivalent to a countable space if and only if its wild set is countable.
 ## Building
 
 You need [elan](https://github.com/leanprover/elan); it picks up the toolchain
-(`leanprover/lean4:v4.35.0`) from `lean-toolchain`. Mathlib is pinned at `v4.35.0`.
+(`leanprover/lean4:v4.36.0-rc2`) from `lean-toolchain`. Dependencies (`lakefile.toml`):
+- Mathlib, pinned to a commit;
+- [Tau Ceti](https://github.com/TauCetiProject/TauCeti), pinned to a commit that uses the same
+  Mathlib commit. Only Part A imports a few of its modules (degree-one Hurewicz); Lake compiles
+  just their small import closure (seconds). Never run `lake build TauCeti`, which compiles the
+  whole library (hours).
 
 ```
 lake exe cache get   # download prebuilt Mathlib instead of compiling it
-lake build           # the library and the audit files
+lake build           # both libraries and their audit files
 ```
 
-The build prints the axioms each key theorem depends on (from `Peano/Audit/`). Compare them with
+Two libraries: `Peano` (Theorems 1.1 and 1.2 and everything they need) and `PeanoPartA` (§2–3 of
+the paper and its own proof of Lemma 6.4), each with its own axioms. The build prints the axioms each
+key theorem depends on (`Peano/Audit/`, `PeanoPartA/Audit.lean`). Compare them with
 `notes/axioms.md`, which lists every axiom and where it comes from.
 
 ## Status

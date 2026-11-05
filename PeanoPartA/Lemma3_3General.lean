@@ -1,21 +1,28 @@
 module
 
-public import Peano.PartA
+public import PeanoPartA.Lemmas
 
 /-!
 # Lemma 3.3 in full generality: several path components
 
 Brazas–Pavešić (arXiv:2610.35875), Lemma 3.3: for a one-dimensional Peano continuum `X` and
 **any** subset `A ⊆ X`, the map `H₁(A) → H₁(X)` induced by the inclusion is injective.
-`Peano.PartA` proves this for one summand of `H₁(A)` at a time
+`PeanoPartA.Lemmas` proves this for one summand of `H₁(A)` at a time
 (`abelianization_map_val_injective`), i.e. for path-connected `A`; the case of several path
 components is finding A-3.3-1 of `notes/checks/A.md`. This file closes that gap. The paper itself
 only uses path-connected `A` (Lemma 6.3, `A = Cₙ`).
 
 ## Statement without a type `H₁(A)`
 
-Homology is modelled as in `Peano.Homology`: `H₁` of a path-connected space is the abelianisation
-of `π₁` (Hurewicz). `H₁` is additive over path components, `H₁(A) = ⊕_c H₁(A_c)`, so an element
+The statement with genuine singular homology, injectivity of `H₁(A; ℤ) → H₁(X; ℤ)` as a map, is
+`Peano.singularHomologyMap_val_injective` (`PeanoPartA.SingularH1Lemmas`), a corollary of the
+statement below: there, every element of `H₁(A; ℤ)` is written as a sum of loop classes over
+distinct path components (`Peano.exists_finset_sum_h1Class`), which is the decomposition that the
+text below takes for granted.
+
+The proof works in the abelianisation model of `PeanoPartA.Homology`: `H₁` of a path-connected
+space is the abelianisation of `π₁` (Hurewicz). `H₁` is additive over path components, `H₁(A) = ⊕_c
+H₁(A_c)`, so an element
 of `H₁(A)` is a finite sum `Σᵢ [αᵢ]_h` of classes of loops `αᵢ` at points `aᵢ` lying in pairwise
 distinct path components of `A`, and it is zero iff every `[αᵢ]_h` is zero in `H₁(A_{c(i)})`.
 Injectivity of `H₁(A) → H₁(X)` is therefore exactly the statement
@@ -28,13 +35,14 @@ Injectivity of `H₁(A) → H₁(X)` is therefore exactly the statement
 The sum is taken in `Additive (Abelianization (FundamentalGroup X x))` for a base point `x`, after
 transporting each loop to `x` along a path `pᵢ : x → aᵢ` (`X` is path-connected); by
 `abelianization_of_conj_eq` the result does not depend on the paths. `homologyClass x γ`
-(`Peano.Homology`) is this transported class for the paths `PathConnectedSpace.somePath`
+(`PeanoPartA.Homology`) is this transported class for the paths `PathConnectedSpace.somePath`
 (`homologyClass_eq`: any other path gives the same class).
 
 ## Proof
 
 Not the arc tree of the review's repair, but an induction that reuses Lemma 3.4
-(`not_isHomologous_of_disjoint`), whose proof in `Peano.PartA` is the retraction argument of the
+(`not_isHomologous_of_disjoint`), whose proof in `PeanoPartA.Lemmas` is the retraction argument of
+the
 repair for two components.
 
 * **Reduction to `X`.** Loops in different path components of `A` have disjoint images. By the
@@ -60,13 +68,13 @@ repair for two components.
   `Finset ι`; the induction replaces `ℓ` by `Function.update ℓ c ⟨_, L⟩` and the index set `s` by
   `s.erase d`, so the index type never changes.
 
-Hypotheses on `X` are those of `Peano.PartA`: a one-dimensional Peano continuum `X : Type`
+Hypotheses on `X` are those of `PeanoPartA.Lemmas`: a one-dimensional Peano continuum `X : Type`
 (compact, connected, locally path-connected metric space of covering dimension `≤ 1`), the scope
 of the axiom `eda_zeroForm`; the paper states Lemma 3.3 for any one-dimensional metrizable space.
 The statements that mention `homologyClass` take `[PathConnectedSpace X]` in place of
 `[ConnectedSpace X]` (equivalent for locally path-connected spaces; it makes `homologyClass`
 definable). Axioms: those of Lemma 3.3 and
-Lemma 3.4 in `Peano.PartA` (`exists_reduced_homotopy`, `isReparam_of_reduced_homotopic`,
+Lemma 3.4 in `PeanoPartA.Lemmas` (`exists_reduced_homotopy`, `isReparam_of_reduced_homotopic`,
 `eda_zeroForm`).
 -/
 

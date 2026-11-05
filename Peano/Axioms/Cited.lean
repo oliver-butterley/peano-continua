@@ -3,7 +3,6 @@ module
 public import Peano.Defs
 public import Peano.Arcs
 public import Peano.LoopWildSet
-public import Peano.Reduced
 public import Mathlib.Topology.Instances.AddCircle.Defs
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
 public import Mathlib.Topology.InductiveDimension.Classes
@@ -27,42 +26,59 @@ open Topology unitInterval
 
 namespace Peano
 
-/-- **Theorem 4.2** of the paper, from Meilstrup, *Classifying homotopy types of one-dimensional
-Peano continua*, Master's thesis, Brigham Young University, 2005, Theorem 2.9 (inspected
-2026-11-05; it has the hypothesis "`B(X) ≠ ∅`", bad points, which the paper drops): every
-one-dimensional Peano continuum is homotopy equivalent to a one-dimensional Peano continuum in
-standard form.
+/-- **Meilstrup's arc-reduced form** (paper Theorem 4.2, and the finite-graph case it omits), from
+Meilstrup, *Classifying homotopy types of one-dimensional Peano continua*, Master's thesis, Brigham
+Young University, 2005 (inspected 2026-11-05, `papers/Classifying Homotopy Types…`):
 
-**Hypothesis `(wildSet X).Nonempty` added** (not in the paper's statement): with Definition 4.1 a
-non-empty standard-form space has non-empty wild set (an arc's end points lie in `w`), and
-homotopy equivalences preserve emptiness of `w`, so the theorem as quoted is false for, e.g., a
-point; without this hypothesis the axiom would be inconsistent. Found by the Part B check
-(`notes/checks/B.md`). -/
-axiom exists_homotopyEquiv_standardForm (X : Type) [MetricSpace X] [CompactSpace X]
-    [ConnectedSpace X] [LocallyPathConnectedSpace X] (hX : CoveringDimLE 1 X)
-    (hw : (wildSet X).Nonempty) :
+* **Theorem 2.9.** "Let `X` be a one-dimensional Peano continuum with `B(X) ≠ ∅`. Then there is a
+  continuum `Y` homotopy equivalent to `X`, with `G(Y)` a disjoint union of a null sequence of
+  (open) arcs." The proof shows that `Y` is a one-dimensional Peano continuum.
+* **Corollary 2.10.** "If `X` is a one-dimensional Peano continuum with `B(X) = ∅` then `X` is
+  homotopy equivalent to a bouquet of finitely many (possibly zero) circles."
+
+Here `B(X)` is the set of *bad points*, those with no simply connected (open) neighbourhood, and
+`G(X) = X ∖ B(X)`.
+
+**Encoding of `B(X)`.** For a one-dimensional Peano continuum, `B(X) = loopWildSet X = wildSet X`
+(`Peano.badSet_eq_loopWildSet`, `Peano.badSet_eq_wildSet` in `PeanoPartA.BadPoints`; the inclusion
+`B ⊆ loopWildSet` uses Brazas–Pavešić Lemma 2.8 (`fundamentalGroup_map_val_injective`) and so the
+Cannon–Conner axioms of `PeanoPartA`, which is why
+that proof is kept out of the main library: it checks this statement and is not used by any
+proof). The hypothesis is stated with `loopWildSet` (Meilstrup's `B(X) ≠ ∅`), the conclusion with
+`wildSet` (inside `IsStandardForm`, which equals `B(X')` since `X'` is again a one-dimensional
+Peano continuum).
+
+**Encoding of "arc-reduced".** `IsStandardForm X'` (the paper's Definition 4.1). The statement of
+Theorem 2.9 says only that `G(Y)` is "a disjoint union of […] (open) arcs"; Definition 4.1 also asks
+that the closure of each arc be an arc or a simple closed curve with end points in `B(Y)`. The
+proof of Theorem 2.9 gives both (`notes/axioms.md`, "Meilstrup Theorem 2.9 and Definition 4.1"):
+`Y` is the quotient of `X` collapsing each ray `r(x)` from a vertex of the locally finite graph
+`G(X)` to its limit point `b(x) ∈ B(X)`; `G(Y)` is the disjoint union of the images of the open
+edges of `G(X)` that lie on no ray, each open in `Y`; the two end vertices of each such edge are
+sent to points `b(·)` of `B(Y)`, so its closure is an arc, or a simple closed curve if both go to
+the same point; the map `g` "slides the end thirds to their endpoints in `B(Y)`". Independently,
+in a Peano continuum every open arc that is open in the space has convergent ends, so the closure
+condition follows from the topological-sum reading of "disjoint union". Countability ("null
+sequence") is not asserted (it is not needed, and pairwise disjoint open sets in a separable space
+are
+countably many).
+
+**Case `B(X) = ∅`.** A bouquet of `n` circles is encoded as a compact metric space with an
+`ArcSystem` with finitely many arcs and finite `W` (weaker than the thesis, which has `W` a
+single point; zero circles is a point, `W` a singleton, no arcs). The paper overlooks this case
+(its Theorem 4.2 drops Meilstrup's hypothesis `B(X) ≠ ∅`, and is false without it: a non-empty
+standard-form space has non-empty wild set, and homotopy equivalences preserve emptiness of `w`);
+it is needed for the case `w(X) = ∅` of Theorem 1.1.
+
+In both cases `X'` is a one-dimensional Peano continuum (the thesis says so for Theorem 2.9; a
+finite bouquet is one). -/
+axiom exists_homotopyEquiv_arcReduced (X : Type) [MetricSpace X] [CompactSpace X]
+    [ConnectedSpace X] [LocallyPathConnectedSpace X] (hX : CoveringDimLE 1 X) :
     ∃ (X' : Type) (_ : MetricSpace X'), CompactSpace X' ∧ ConnectedSpace X' ∧
-      LocallyPathConnectedSpace X' ∧ CoveringDimLE 1 X' ∧ IsStandardForm X' ∧
-      Nonempty (ContinuousMap.HomotopyEquiv X X')
-
-/-- **Finite graphs.** A one-dimensional Peano continuum with no wild points is homotopy equivalent
-to a finite graph. Source: Brazas–Pavešić, *Motion planning on one-dimensional Peano continua*,
-arXiv:2510.22901, Theorem 3.9 (a non-simply-connected one-dimensional Peano continuum with empty
-wild set deformation retracts onto a finite graph), together with, for the simply connected case,
-Corollary 3.3 there (simply connected ⇒ uniquely arcwise connected, i.e. a dendrite) and the
-contractibility of dendrites (Nadler, *Continuum Theory*, Ch. X), which gives a homotopy
-equivalence with a point.
-
-The source defines wild points by small essential loops (its Definition 3.5), so the hypothesis
-uses `loopWildSet`. A finite graph is encoded as a compact metric space carrying an `ArcSystem`
-with finitely many arcs and a finite closed set `W` (the vertices; the point is the graph with one
-vertex and no edges). Not in the paper: it is needed for the case `w(X) = ∅` of Theorem 1.1, which
-the paper's proof overlooks (Theorem 4.2 fails there). -/
-axiom exists_homotopyEquiv_finiteGraph (X : Type) [MetricSpace X] [CompactSpace X]
-    [ConnectedSpace X] [LocallyPathConnectedSpace X] (hX : CoveringDimLE 1 X)
-    (hw : loopWildSet X = ∅) :
-    ∃ (X' : Type) (_ : MetricSpace X') (S : ArcSystem X'), CompactSpace X' ∧ S.W.Finite ∧
-      Finite S.ι ∧ Nonempty (ContinuousMap.HomotopyEquiv X X')
+      LocallyPathConnectedSpace X' ∧ CoveringDimLE 1 X' ∧
+      Nonempty (ContinuousMap.HomotopyEquiv X X') ∧
+      ((loopWildSet X).Nonempty → IsStandardForm X') ∧
+      (loopWildSet X = ∅ → ∃ S : ArcSystem X', S.W.Finite ∧ Finite S.ι)
 
 /-- **Theorem 6.1** of the paper, from Eda, *The fundamental groups of one-dimensional spaces and
 spatial homomorphisms*, Topology Appl. 123 (2002), Theorem 1.1: for a one-dimensional Peano
@@ -119,60 +135,5 @@ axiom eda_homotopyEquiv_of_homeomorph (X Y : Type) [MetricSpace X] [CompactSpace
     (hY : CoveringDimLE 1 Y) (hXne : (loopWildSet X).Nonempty) (hYne : (loopWildSet Y).Nonempty)
     (hX0 : ZeroDimensionalSpace (loopWildSet X)) (hY0 : ZeroDimensionalSpace (loopWildSet Y))
     (φ : loopWildSet X ≃ₜ loopWildSet Y) : Nonempty (ContinuousMap.HomotopyEquiv X Y)
-
-/-! ### Inputs of Part A (§2–3); used only by the paper's own route to Lemma 6.4 -/
-
-/-- **Remark 2.7**, existence half, from Cannon–Conner, *On the fundamental groups of
-one-dimensional spaces*, Topology Appl. 153 (2006), Theorem 3.9 (inspected 2026-11-05,
-`papers/1-s2.0-S0166864105002907-main.pdf`: stated under the standing hypotheses of their §3.2,
-compact, path-connected, one-dimensional metric, l.246; "reduced" as in their Definition 3.8; the
-image condition comes from their proof, l.312 and l.322, and Corollary 3.2, and is explicit in the
-restatement of Constantine–Lafont, arXiv:1209.3709, Thm 2.10; the paper's Remark 2.7 overstates the
-scope as "metrizable"): every loop is homotopic rel end points to a reduced
-loop by a homotopy whose image lies in the image of the loop. Assumed only for compact
-path-connected spaces, the restatement's scope. -/
-axiom exists_reduced_homotopy (X : Type) [MetricSpace X] [CompactSpace X] [PathConnectedSpace X]
-    (hX : CoveringDimLE 1 X) {x : X} (α : Path x x) :
-    ∃ β : Path x x, IsReducedPath β ∧ ∃ H : Path.Homotopy α β, Set.range H ⊆ Set.range α
-
-/-- **Remark 2.7**, uniqueness half (same source and scope as `exists_reduced_homotopy`): reduced
-loops that are homotopic rel end points differ by an increasing reparametrisation. -/
-axiom isReparam_of_reduced_homotopic (X : Type) [MetricSpace X] [CompactSpace X]
-    [PathConnectedSpace X] (hX : CoveringDimLE 1 X) {x : X} {β β' : Path x x}
-    (hβ : IsReducedPath β) (hβ' : IsReducedPath β') (h : β.Homotopic β') :
-    IsReparam (β : C(I, X)) β'
-
-/-- **Lemma 3.2** (zero-form lemma), direction "⇒", from Eda, *Singular homology groups of
-one-dimensional Peano continua*, Fund. Math. 232 (2016), Lemma 3.6, as quoted by the paper: if an
-essential loop `α` is null-homologous, then a reduced representative of `α` is (the concatenation
-of) a 0-form.
-
-Only this direction is assumed: the converse, "a 0-form is null-homologous", holds in every space
-and is proved (`Peano.fromPath_mem_commutator_of_isZeroFormCut`, `Peano.Homology`).
-"Null-homologous" is stated through the Hurewicz theorem (Hatcher, Thm 2A.1: for path-connected
-`X`, `H₁(X) ≅ π₁(X, x)^ab`, so `[α]_h = 0` iff `[α]` lies in the commutator subgroup; Eda's proof
-uses the same translation). Checked against Eda's text (`papers/fm232-2-01.txt`: `≡` l.126–128,
-reduced paths l.148–150, Definition 3.4 l.175–180, Lemma 3.6 l.185–187). Eda's `≡` is equality up
-to an increasing homeomorphism, so `IsZeroFormCut` is Eda's 0-form; the paper's exact "=" in its
-Definition 3.1 is a misquote (`notes/checks/A.md`, A-3.1-1). Eda's Lemma 3.6 holds for
-one-dimensional metric spaces; assuming it only for Peano continua is stricter than the source. -/
-axiom eda_zeroForm (X : Type) [MetricSpace X] [CompactSpace X] [ConnectedSpace X]
-    [LocallyPathConnectedSpace X] (hX : CoveringDimLE 1 X) {x : X} (α : Path x x)
-    (hα : ¬ α.Homotopic (Path.refl x))
-    (h : FundamentalGroup.fromPath ⟦α⟧ ∈ commutator (FundamentalGroup X x)) :
-    ∃ ρ : Path x x, IsReducedPath ρ ∧ ρ.Homotopic α ∧ IsZeroFormCut (ρ : C(I, X))
-
-/-- **Simple closed curves**, the "well-known fact" in the proof of Lemma 6.3 in its corrected form
-(`notes/checks/D.md`): a path-connected one-dimensional metric space with an essential loop
-contains a simple closed curve (an injective image of the circle). Source: Brazas–Pavešić,
-arXiv:2510.22901, Corollary 3.3 (a path-connected one-dimensional Hausdorff space is simply
-connected iff it is uniquely arcwise connected) with the fact quoted there before Definition 3.5
-(a path-connected Hausdorff space is uniquely arcwise connected iff it contains no simple closed
-curve). Alternative source: Cannon–Conner 2006, Definition 3.6 and l.261 (a Peano continuum with no
-simple closed curve is a dendrite, and dendrites are contractible), applied to the image of the
-loop; this shows the dimension hypothesis is not needed. -/
-axiom exists_simpleClosedCurve (X : Type) [MetricSpace X] [PathConnectedSpace X]
-    (hX : CoveringDimLE 1 X) {x : X} (α : Path x x) (hα : ¬ α.Homotopic (Path.refl x)) :
-    ∃ c : C(AddCircle (1 : ℝ), X), Function.Injective c
 
 end Peano

@@ -17,10 +17,9 @@ Expected axioms (besides the standard three):
   proved in `Peano.BrazasFischer`): `Peano.exists_nhds_monodromy` (discrete monodromy).
 * `nonempty_homotopyEquiv_iff`: `Peano.exists_nhds_monodromy`,
   `Peano.eda_homotopyEquiv_of_homeomorph` (Eda 2022, the paper's Theorem 6.6).
-* `nonempty_homotopyEquiv_iff_of_weq`: those two and the other three of Theorem 1.1
-  (`eda_exists_map_earring`, `exists_homotopyEquiv_standardForm`,
-  `exists_homotopyEquiv_finiteGraph`).
-* `exists_wildSet_homeomorph`: `Peano.coveringDimLE_one_of_interior_eq_empty` (dimension theory).
+* `nonempty_homotopyEquiv_iff_of_weq`: those two and the other two of Theorem 1.1
+  (`eda_exists_map_earring`, `exists_homotopyEquiv_arcReduced`).
+* `exists_wildSet_homeomorph`: none (one-dimensionality of the models is proved, `Peano.Dimension`).
 * `compactSpace_wildSet`: none.
 -/
 

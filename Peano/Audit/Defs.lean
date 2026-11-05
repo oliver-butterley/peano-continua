@@ -29,6 +29,3 @@ standard notions). See `notes/checks/definitions-review.md`.
 #print Peano.openUnit
 #print Peano.IsStandardForm
 #print Peano.ArcSystem
-#print Peano.IsReducedPath
-#print Peano.IsReparam
-#print Peano.IsZeroFormCut

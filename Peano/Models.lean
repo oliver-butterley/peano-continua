@@ -2,7 +2,7 @@ module
 
 public import Peano.PlaneGeometry
 public import Peano.LoopWildSet
-public import Peano.Axioms.Standard
+public import Peano.Dimension
 public import Mathlib.Analysis.Real.Cardinality
 public import Mathlib.Analysis.Normed.Group.FunctionSeries
 public import Mathlib.Topology.Algebra.Module.Cardinality
@@ -45,10 +45,15 @@ and be pairwise disjoint).
   every circle (image of a periodic curve injective modulo `1`, `locJoin_range_of_periodic`) have
   it, and a union of a set with shrinking pieces attached keeps it
   (`locJoin_union_iUnion_of_shrinking`).
-* **One-dimensional**: the model is a countable union of closed nowhere dense sets (segment and
-  circles), hence has empty interior by Baire; the axiom
-  `coveringDimLE_one_of_interior_eq_empty` then gives `CoveringDimLE 1`. This is the only use of
-  an axiom.
+* **One-dimensional** (`coveringDimLE_model`): the model is rim-finite, so
+  `coveringDimLE_one_of_finite_frontier` (`Peano.Dimension`) applies. The tool is the projection
+  `proj` onto the axis (the earring at `b` goes to `u_b`), continuous on the model because the
+  earrings lie in discs tangent to the axis. A point `x` has the neighbourhoods
+  `proj⁻¹ (c₁, c₂) ∩ ball x ρ`, whose frontier lies in `{(c₁, 0), (c₂, 0)}` together with the
+  points of the square `sphere x ρ` on the finitely many circles that are not small; each circle
+  meets a square in finitely many points. The abscissae `c₁, c₂` are chosen off the countable set
+  of attachment abscissae. No axiom is used. (The model also has empty interior in `ℝ²`, by
+  Baire: `interior_model`.)
 * **Wild points**: the earring at `a` is fully essential, because the model retracts onto it
   (`earringFrom`: the inverse similarity on the earring, the base point elsewhere; continuous by
   gluing two closed sets meeting at the attachment point) and its loops are essential in `𝔼`.
@@ -66,7 +71,9 @@ and be pairwise disjoint).
 `loopWildSet_modelSet_subset_range`, all collected in `exists_model`. Together with
 `wildSet ⊆ loopWildSet` (proved elsewhere) they give `wildSet (modelSet K) ≃ₜ K`. Along the way:
 `exists_continuous_injective_real` (a countable metric space injects continuously into `ℝ`) and
-`exists_scales`.
+`exists_scales`. `exists_modelData_of_countable` attaches the earrings at an arbitrary countable
+bounded set of abscissae instead (not necessarily closed; used for a continuum with uncountable
+wild set in `Peano.Sanity`).
 
 ## Design choices
 
@@ -297,6 +304,17 @@ theorem nonempty_modelData (K : Type*) [MetricSpace K] [CompactSpace K] [Countab
   obtain ⟨L, hL⟩ := isCompact_univ.exists_bound_of_continuousOn hu.continuousOn
   obtain ⟨s, h1, h2, h3, h4⟩ := exists_scales u hinj
   exact ⟨⟨u, s, L, hu, hinj, fun a => by simpa using hL a (mem_univ a), h1, h2, h3, h4⟩⟩
+
+/-- Model data attaching the earrings at the points `(a, 0)` of a countable bounded set
+`S ⊆ ℝ`, which need not be closed (`u` is the inclusion `S → ℝ`). For dense `S` the model has an
+uncountable wild set (`Peano.Sanity.exists_peano_wildSet_not_countable`). -/
+theorem exists_modelData_of_countable (S : Set ℝ) (hS : S.Countable)
+    (hb : Bornology.IsBounded S) : ∃ D : ModelData S, ∀ a, D.u a = a := by
+  have : Countable S := hS.to_subtype
+  obtain ⟨C, hC⟩ := hb.exists_norm_le
+  obtain ⟨s, h1, h2, h3, h4⟩ := exists_scales (Subtype.val : S → ℝ) Subtype.val_injective
+  exact ⟨⟨Subtype.val, s, C, continuous_subtype_val, Subtype.val_injective,
+    fun a => by simpa [Real.norm_eq_abs] using hC a a.2, h1, h2, h3, h4⟩, fun _ => rfl⟩
 
 namespace ModelData
 
@@ -646,11 +664,6 @@ instance connectedSpace_model [Nonempty K] : ConnectedSpace D.model :=
 instance locallyPathConnectedSpace_model : LocallyPathConnectedSpace D.model :=
   locallyPathConnectedSpace_of_locJoin fun p _ => D.locJoin_model p
 
-/-- The model is at most one-dimensional (via the axiom on planar compacta with empty
-interior). -/
-theorem coveringDimLE_model [Countable K] : CoveringDimLE 1 D.model :=
-  coveringDimLE_one_of_interior_eq_empty _ D.isCompact_model D.interior_model
-
 /-! ### Wild points -/
 
 /-- The attachment points, as points of the model: `a ↦ (uₐ, 0)`. -/
@@ -877,6 +890,234 @@ theorem loopWildSet_subset_range_incl [CompactSpace K] :
     obtain ⟨k, hk⟩ := D.mem_ear_iff.1 ha
     exact D.exists_nhds_homotopic_refl_of_mem_circle hk fun h => hxr ⟨a, Subtype.ext h.symm⟩
 
+/-! ### One-dimensionality -/
+
+/-- Points of the model lie in the closed upper half-plane. -/
+lemma snd_nonneg {y : ℝ × ℝ} (hy : y ∈ D.model) : 0 ≤ y.2 := by
+  rcases hy with hy | hy
+  · exact le_of_eq (hy.2 : y.2 = 0).symm
+  · obtain ⟨b, hb⟩ := mem_iUnion.1 hy
+    obtain ⟨k, hk⟩ := D.mem_ear_iff.1 hb
+    exact (D.circle_bounds hk).1
+
+open Classical in
+/-- The projection of the model onto the axis: a point of the earring at `b` goes to the
+abscissa `u_b` of its attachment point, a point of the segment to its abscissa. (Defined on all
+of `ℝ²`; only its values on the model matter.) -/
+def proj (y : ℝ × ℝ) : ℝ :=
+  if h : ∃ b, y ∈ D.ear b ∧ 0 < y.2 then D.u h.choose else y.1
+
+/-- On the axis (and below it), `proj` is the abscissa. -/
+lemma proj_of_not_pos {y : ℝ × ℝ} (h : ¬ 0 < y.2) : D.proj y = y.1 := by
+  rw [proj, dite_eq_right (fun ⟨_, _, h'⟩ => h h')]
+
+/-- On the segment, `proj` is the abscissa. -/
+lemma proj_of_mem_seg {y : ℝ × ℝ} (hy : y ∈ D.seg) : D.proj y = y.1 :=
+  D.proj_of_not_pos (by rw [(hy.2 : y.2 = 0)]; exact lt_irrefl 0)
+
+/-- On the earring at `b`, `proj` is the abscissa `u_b` of the attachment point. -/
+lemma proj_of_mem_ear {b : K} {y : ℝ × ℝ} (hy : y ∈ D.ear b) : D.proj y = D.u b := by
+  by_cases h2 : 0 < y.2
+  · have h : ∃ b, y ∈ D.ear b ∧ 0 < y.2 := ⟨b, hy, h2⟩
+    rw [proj, dite_eq_left h]
+    by_contra hne
+    have hb : h.choose ≠ b := fun e => hne (by rw [e])
+    exact Set.disjoint_left.1 (D.disjoint_ear hb) h.choose_spec.1 hy
+  · rw [D.proj_of_not_pos h2]
+    obtain ⟨k, hk⟩ := D.mem_ear_iff.1 hy
+    have h0 : y.2 = 0 := le_antisymm (not_lt.1 h2) (D.circle_bounds hk).1
+    exact (congrArg Prod.fst (D.eq_base_of_mem_ear hy h0)).trans rfl
+
+/-- `proj` takes values in `[-L, L]` on the model. -/
+lemma abs_proj_le {y : ℝ × ℝ} (hy : y ∈ D.model) : |D.proj y| ≤ D.L := by
+  rcases hy with hy | hy
+  · rw [D.proj_of_mem_seg hy]; exact abs_le.2 hy.1
+  · obtain ⟨b, hb⟩ := mem_iUnion.1 hy
+    rw [D.proj_of_mem_ear hb]; exact D.abs_u_le b
+
+/-- A point of the model at height `y₂` is within `√(2 y₂)` of `proj y` horizontally (the
+earrings lie in discs tangent to the axis, of radius at most `1`). -/
+lemma sq_proj_sub_fst_le {y : ℝ × ℝ} (hy : y ∈ D.model) : (D.proj y - y.1) ^ 2 ≤ 2 * y.2 := by
+  rcases hy with hy | hy
+  · rw [D.proj_of_mem_seg hy, sub_self, (hy.2 : y.2 = 0)]; norm_num
+  · obtain ⟨b, hb⟩ := mem_iUnion.1 hy
+    obtain ⟨k, hk⟩ := D.mem_ear_iff.1 hb
+    obtain ⟨h0, -, -, h⟩ := D.circle_bounds hk
+    rw [D.proj_of_mem_ear hb]
+    have := D.s_le_one b
+    nlinarith [sq_nonneg (D.u b - y.1), mul_nonneg h0 (sub_nonneg.2 this), mul_nonneg h0 h0]
+
+/-- `proj` is continuous on the model: it is locally constant off the axis (near a point of the
+earring at `a` above the axis the model is that earring), and near a point `(t, 0)` of the axis
+it is close to the abscissa by `sq_proj_sub_fst_le`. -/
+lemma continuous_proj : Continuous fun z : D.model => D.proj z := by
+  rw [Metric.continuous_iff]
+  intro y ε hε
+  rcases (D.snd_nonneg y.2).lt_or_eq with hy | hy
+  · -- off the axis `proj` is locally constant
+    obtain ⟨a, ha⟩ : ∃ a, (y : ℝ × ℝ) ∈ D.ear a := by
+      rcases y.2 with h | h
+      · exact (hy.ne' h.2).elim
+      · exact mem_iUnion.1 h
+    have hyR : (y : ℝ × ℝ) ∉ D.rest a := by
+      rintro (h | h)
+      · exact hy.ne' h.2
+      · obtain ⟨⟨b, hb⟩, h⟩ := mem_iUnion.1 h
+        exact Set.disjoint_left.1 (D.disjoint_ear hb) h ha
+    obtain ⟨δ, hδ, hδR⟩ := Metric.isOpen_iff.1 (D.isClosed_rest a).isOpen_compl _ hyR
+    refine ⟨δ, hδ, fun z hz => ?_⟩
+    have hzR : (z : ℝ × ℝ) ∉ D.rest a := hδR (show dist (z : ℝ × ℝ) y < δ from hz)
+    have hza : (z : ℝ × ℝ) ∈ D.ear a := (D.model_subset_ear_union_rest a z.2).resolve_right hzR
+    rw [D.proj_of_mem_ear hza, D.proj_of_mem_ear ha, dist_self]
+    exact hε
+  · -- on the axis
+    have hπy : D.proj y = (y : ℝ × ℝ).1 := D.proj_of_not_pos (by rw [← hy]; exact lt_irrefl 0)
+    refine ⟨min (ε / 2) (ε ^ 2 / 8), lt_min (half_pos hε) (by positivity), fun z hz => ?_⟩
+    have hz1 : |(z : ℝ × ℝ).1 - (y : ℝ × ℝ).1| < ε / 2 :=
+      (abs_fst_sub_le_dist _ _).trans_lt (hz.trans_le (min_le_left _ _))
+    have hz2 : |(z : ℝ × ℝ).2 - (y : ℝ × ℝ).2| < ε ^ 2 / 8 :=
+      (abs_snd_sub_le_dist _ _).trans_lt (hz.trans_le (min_le_right _ _))
+    rw [← hy, sub_zero, abs_of_nonneg (D.snd_nonneg z.2)] at hz2
+    have hsq := D.sq_proj_sub_fst_le z.2
+    have h3 : |D.proj z - (z : ℝ × ℝ).1| < ε / 2 :=
+      abs_lt_of_sq_lt_sq (by nlinarith) (by positivity)
+    rw [Real.dist_eq, hπy]
+    calc |D.proj z - (y : ℝ × ℝ).1|
+        ≤ |D.proj z - (z : ℝ × ℝ).1| + |(z : ℝ × ℝ).1 - (y : ℝ × ℝ).1| := abs_sub_le _ _ _
+      _ < ε / 2 + ε / 2 := add_lt_add h3 hz1
+      _ = ε := add_halves ε
+
+/-- A circle of the model meets a sup-metric sphere in finitely many points. -/
+lemma finite_inter_sphere_circle (a : K) (k : ℕ) (x : ℝ × ℝ) (ρ : ℝ) :
+    (D.circle a k ∩ sphere x ρ).Finite :=
+  (Peano.finite_circle_inter_sphere (D.u a, D.s a * earringRadius k)
+    (D.s a * earringRadius k) x ρ).subset fun _ hy => ⟨D.mem_circle_iff.1 hy.1, hy.2⟩
+
+/-- The frontier of the neighbourhood `proj⁻¹ (c₁, c₂) ∩ ball x ρ` is finite, provided `c₁, c₂`
+are not attachment abscissae, the sphere `sphere x ρ` misses the segment over `[c₁, c₂]`, and
+only finitely many circles attached over `[c₁, c₂]` meet it. The frontier lies in
+`proj⁻¹ {c₁, c₂} = {(c₁, 0), (c₂, 0)}` together with the points of `sphere x ρ` over `[c₁, c₂]`. -/
+private lemma finite_frontier_aux {x : D.model} {ρ c₁ c₂ : ℝ} (hc : c₁ < c₂)
+    (hc₁ : c₁ ∉ range D.u) (hc₂ : c₂ ∉ range D.u)
+    (hseg : ∀ y ∈ D.seg, y.1 ∈ Icc c₁ c₂ → dist y (x : ℝ × ℝ) ≠ ρ)
+    (hcirc : {i : K × ℕ | ∃ y ∈ D.circle i.1 i.2,
+      D.u i.1 ∈ Icc c₁ c₂ ∧ dist y (x : ℝ × ℝ) = ρ}.Finite) :
+    (frontier ((fun z : D.model => D.proj z) ⁻¹' Ioo c₁ c₂ ∩ ball x ρ)).Finite := by
+  have hπ := D.continuous_proj
+  have h1 : frontier ((fun z : D.model => D.proj z) ⁻¹' Ioo c₁ c₂ ∩ ball x ρ) ⊆
+      {z | D.proj z = c₁ ∨ D.proj z = c₂} ∪ {z | D.proj z ∈ Icc c₁ c₂ ∧ dist z x = ρ} := by
+    refine (frontier_inter_subset _ _).trans (union_subset_union ?_ ?_)
+    · refine inter_subset_left.trans ((hπ.frontier_preimage_subset _).trans ?_)
+      rw [frontier_Ioo hc]
+      intro z hz
+      simpa using hz
+    · rintro z ⟨hz1, hz2⟩
+      exact ⟨closure_minimal (preimage_mono Ioo_subset_Icc_self) (isClosed_Icc.preimage hπ) hz1,
+        dist_eq_of_mem_frontier_ball hz2⟩
+  refine Finite.subset (Finite.union ?_ ?_) h1
+  · refine ((toFinite ({(c₁, 0), (c₂, 0)} : Set (ℝ × ℝ))).preimage
+      Subtype.val_injective.injOn).subset fun z hz => ?_
+    have hzs : (z : ℝ × ℝ) ∈ D.seg := by
+      rcases z.2 with h | h
+      · exact h
+      · obtain ⟨b, hb⟩ := mem_iUnion.1 h
+        rcases hz with hz | hz <;> rw [D.proj_of_mem_ear hb] at hz
+        · exact (hc₁ ⟨b, hz⟩).elim
+        · exact (hc₂ ⟨b, hz⟩).elim
+    have h2 : (z : ℝ × ℝ).2 = 0 := hzs.2
+    rcases hz with hz | hz <;> rw [D.proj_of_mem_seg hzs] at hz
+    · exact Or.inl (Prod.ext hz h2)
+    · exact Or.inr (Prod.ext hz h2)
+  · refine ((hcirc.biUnion fun i _ => D.finite_inter_sphere_circle i.1 i.2 (x : ℝ × ℝ) ρ).preimage
+      Subtype.val_injective.injOn).subset fun z hz => ?_
+    obtain ⟨hz1, hz2⟩ := hz
+    rcases z.2 with h | h
+    · exact (hseg _ h (by rwa [D.proj_of_mem_seg h] at hz1) hz2).elim
+    · obtain ⟨b, hb⟩ := mem_iUnion.1 h
+      obtain ⟨k, hk⟩ := D.mem_ear_iff.1 hb
+      rw [D.proj_of_mem_ear hb] at hz1
+      exact mem_iUnion₂.2 ⟨(b, k), ⟨z, hk, hz1, hz2⟩, hk, hz2⟩
+
+/-- **The model is at most one-dimensional.** It is rim-finite
+(`coveringDimLE_one_of_finite_frontier`): a point `x` has the neighbourhoods
+`proj⁻¹ (c₁, c₂) ∩ ball x ρ` with finite frontier (`finite_frontier_aux`). Off the axis, take
+`ρ < x₂ / 4` and `(c₁, c₂) ⊇ [-L, L]`: only the finitely many circles reaching height `x₂ / 2`
+can meet the sphere. On the axis, `x = (t, 0)`, take `ρ` small and `c₁ < t < c₂` within `ρ / 2`
+of `t` and off the countably many attachment abscissae: then only the finitely many circles not
+within `ρ / 4` of their attachment point can meet the sphere. -/
+theorem coveringDimLE_model [Countable K] : CoveringDimLE 1 D.model := by
+  refine coveringDimLE_one_of_finite_frontier fun x N hN => ?_
+  obtain ⟨r, hr, hrN⟩ := Metric.mem_nhds_iff.1 hN
+  suffices ∃ ρ ∈ Ioo 0 r, ∃ c₁ c₂, c₁ < D.proj x ∧ D.proj x < c₂ ∧ c₁ ∉ range D.u ∧
+      c₂ ∉ range D.u ∧ (∀ y ∈ D.seg, y.1 ∈ Icc c₁ c₂ → dist y (x : ℝ × ℝ) ≠ ρ) ∧
+      {i : K × ℕ | ∃ y ∈ D.circle i.1 i.2,
+        D.u i.1 ∈ Icc c₁ c₂ ∧ dist y (x : ℝ × ℝ) = ρ}.Finite by
+    obtain ⟨ρ, hρ, c₁, c₂, h1, h2, hc₁, hc₂, hseg, hcirc⟩ := this
+    exact ⟨_, (isOpen_Ioo.preimage D.continuous_proj).inter isOpen_ball,
+      ⟨⟨h1, h2⟩, mem_ball_self hρ.1⟩,
+      inter_subset_right.trans ((ball_subset_ball hρ.2.le).trans hrN),
+      D.finite_frontier_aux (h1.trans h2) hc₁ hc₂ hseg hcirc⟩
+  rcases (D.snd_nonneg x.2).lt_or_eq with hx2 | hx2
+  · -- off the axis
+    set ρ := min (r / 2) ((x : ℝ × ℝ).2 / 4) with hρ_def
+    have hρ0 : 0 < ρ := lt_min (half_pos hr) (by linarith)
+    have hρx : ρ ≤ (x : ℝ × ℝ).2 / 4 := min_le_right _ _
+    have hπ := abs_le.1 (D.abs_proj_le x.2)
+    have hu : ∀ c, D.L < |c| → c ∉ range D.u := fun c hc ⟨a, ha⟩ => by
+      have := D.abs_u_le a; rw [ha] at this; linarith
+    refine ⟨ρ, ⟨hρ0, (min_le_left _ _).trans_lt (half_lt_self hr)⟩, -D.L - 1, D.L + 1,
+      by linarith, by linarith, hu _ ?_, hu _ ?_, fun y hy _ hd => ?_, ?_⟩
+    · rw [abs_of_neg (by linarith)]; linarith
+    · rw [abs_of_pos (by linarith)]; linarith
+    · have h0 : y.2 = 0 := hy.2
+      have := abs_snd_sub_le_dist y x
+      rw [hd, h0] at this
+      have := neg_le_abs (0 - (x : ℝ × ℝ).2)
+      linarith
+    · refine (D.finite_circle_not_small (ε := (x : ℝ × ℝ).2 / 2) (by linarith)).subset ?_
+      intro i hi
+      obtain ⟨y, hy, -, hd⟩ := hi
+      intro hsub
+      have h1 : dist y (D.base i.1) ≤ (x : ℝ × ℝ).2 / 2 := hsub hy
+      have h2 := abs_snd_sub_le_dist y (D.base i.1)
+      have h3 := abs_snd_sub_le_dist y x
+      have hb : (D.base i.1).2 = 0 := rfl
+      rw [hb, sub_zero] at h2
+      rw [hd] at h3
+      have := le_abs_self y.2
+      have := neg_le_abs (y.2 - (x : ℝ × ℝ).2)
+      linarith
+  · -- on the axis
+    have hπx : D.proj x = (x : ℝ × ℝ).1 := D.proj_of_not_pos (by rw [← hx2]; exact lt_irrefl 0)
+    set t := (x : ℝ × ℝ).1 with ht
+    set ρ := r / 2 with hρ_def
+    have hρ0 : 0 < ρ := half_pos hr
+    obtain ⟨c₁, hc₁, hc₁'⟩ := ((countable_range D.u).dense_compl ℝ).exists_between
+      (show t - ρ / 2 < t by linarith)
+    obtain ⟨c₂, hc₂, hc₂'⟩ := ((countable_range D.u).dense_compl ℝ).exists_between
+      (show t < t + ρ / 2 by linarith)
+    have hnear : ∀ v ∈ Icc c₁ c₂, dist ((v, 0) : ℝ × ℝ) (x : ℝ × ℝ) < ρ / 2 := by
+      intro v hv
+      rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
+      dsimp only
+      rw [← hx2, sub_self, abs_zero]
+      exact max_lt (abs_lt.2 ⟨by linarith [hv.1, hc₁'.1], by linarith [hv.2, hc₂'.2]⟩)
+        (by linarith)
+    refine ⟨ρ, ⟨hρ0, half_lt_self hr⟩, c₁, c₂, by rw [hπx]; exact hc₁'.2, by rw [hπx]; exact hc₂'.1,
+      hc₁, hc₂,
+      fun y hy hy1 hd => ?_, ?_⟩
+    · have hy' : y = (y.1, 0) := Prod.ext rfl (hy.2 : y.2 = 0)
+      have := hnear y.1 hy1
+      rw [← hy', hd] at this
+      linarith
+    · refine (D.finite_circle_not_small (ε := ρ / 4) (by linarith)).subset ?_
+      intro i hi
+      obtain ⟨y, hy, hu, hd⟩ := hi
+      intro hsub
+      have h1 : dist y (D.base i.1) ≤ ρ / 4 := hsub hy
+      have h2 : dist (D.base i.1) (x : ℝ × ℝ) < ρ / 2 := hnear _ hu
+      linarith [dist_triangle y (D.base i.1) (x : ℝ × ℝ)]
+
 end ModelData
 
 /-! ### The models `A_K` -/
@@ -910,7 +1151,7 @@ instance connectedSpace_modelSet [Nonempty K] : ConnectedSpace (modelSet K) :=
 instance locallyPathConnectedSpace_modelSet : LocallyPathConnectedSpace (modelSet K) :=
   (modelData K).locallyPathConnectedSpace_model
 
-/-- `A_K` is at most one-dimensional. Uses the axiom `coveringDimLE_one_of_interior_eq_empty`. -/
+/-- `A_K` is at most one-dimensional. -/
 theorem coveringDimLE_modelSet : CoveringDimLE 1 (modelSet K) :=
   (modelData K).coveringDimLE_model
 

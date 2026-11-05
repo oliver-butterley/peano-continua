@@ -4,6 +4,7 @@ public import Peano.Thm1_1
 public import Peano.Thm1_2
 public import Peano.Models
 public import Peano.PlaneGeometry
+public import Peano.Dimension
 
 /-!
 # Sanity checks: the definitions and main statements are not vacuous
@@ -44,15 +45,19 @@ or trivial.
    exactly `1` (`coveringDim_earringCircle_zero`, `coveringDim_planarArc`: each is the conjunction
    `CoveringDimLE 1 ∧ ¬ CoveringDimLE 0`).
 
-Not formalised: an instance of the "only if" direction of Theorem 1.1 (a one-dimensional Peano
-continuum with uncountable wild set, e.g. the model over a Cantor set): the planar models of
-`Peano.Models` are built for countable `K` only.
+6. **The "only if" direction of Theorem 1.1 has an instance.** The planar model with an earring
+   attached at every rational point of `[0, 1] × {0}` is a one-dimensional Peano continuum whose
+   wild set contains the whole segment (attachment points are wild and the wild set is closed),
+   so it is uncountable (`exists_peano_wildSet_not_countable`); by Theorem 1.1 it admits no weak
+   homotopy equivalence to a countable space (`exists_no_countable_model`).
 
 ## Design
 
 The circle used in 3. is the planar circle `earringCircle 0` (centre `(1, 0)`, radius `1`) as a
-subtype of `ℝ × ℝ`, so that the textbook axiom `coveringDimLE_one_of_interior_eq_empty` gives its
-dimension; its essential loop is the earring loop `ℓ₀`, which stays in this circle. Non-wildness
+subtype of `ℝ × ℝ`, so that `coveringDimLE_one_of_finite_sphere` (`Peano.Dimension`: it meets
+small squares in finitely many points) gives its dimension; its essential loop is the earring loop
+`ℓ₀`, which stays in this circle.
+Non-wildness
 of its points (and of the non-base points of the earring) is proved with
 `homotopic_refl_of_radial_retraction` (radial projection on a ball avoiding the centre). The
 geometry of the earring circles (parametrisation, compactness, empty interior, local
@@ -66,10 +71,11 @@ classification results.
 1., 5. (except the upper bounds on dimension), the non-wildness of the circle, the arc and the
 non-base points of the earring, the finite models of the point, the circle (its coarsification as
 a finite graph, `circleArcSystem`) and the arc, and the non-homotopy-equivalences use no axioms
-beyond Lean's. One-dimensionality of the circle, the arc and the earring uses
-`coveringDimLE_one_of_interior_eq_empty`; so this is the only axiom of `thm1_2_counterexample` and
-`thm1_2_counterexample_dim_one`. The countable weak models of 2. and of the earring come from
-Theorem 1.1 ("if" direction, `exists_countable_weq`) and carry its cited axioms.
+beyond Lean's; so do the upper bounds on dimension (proved directly in `Peano.Dimension`), hence
+`thm1_2_counterexample`, `thm1_2_counterexample_dim_one` and
+`exists_peano_wildSet_not_countable`. The countable weak models of 2. and of the earring come
+from Theorem 1.1 ("if" direction, `exists_countable_weq`) and carry its cited axioms;
+`exists_no_countable_model` uses the "only if" direction and carries its cited axioms.
 -/
 
 @[expose] public section
@@ -181,10 +187,18 @@ instance locallyPathConnectedSpace_earringCircle (k : ℕ) :
     LocallyPathConnectedSpace (earringCircle k) :=
   locallyPathConnectedSpace_of_locJoin fun p _ => locJoin_earringCircle k p
 
-/-- The circle `Cₖ` is at most one-dimensional (via the textbook axiom on planar compacta with
-empty interior). -/
+/-- The earring circle `Cₖ` meets every sup-metric sphere in finitely many points. -/
+theorem finite_earringCircle_inter_sphere (k : ℕ) (x : ℝ × ℝ) (ρ : ℝ) :
+    (earringCircle k ∩ sphere x ρ).Finite :=
+  (finite_circle_inter_sphere (earringRadius k, 0) (earringRadius k) x ρ).subset
+    fun y hy => ⟨show (y.1 - earringRadius k) ^ 2 + (y.2 - 0) ^ 2 = earringRadius k ^ 2 by
+      rw [sub_zero]; exact hy.1, hy.2⟩
+
+/-- The circle `Cₖ` is at most one-dimensional: it meets every square in finitely many points
+(`coveringDimLE_one_of_finite_sphere`). -/
 theorem coveringDimLE_earringCircle (k : ℕ) : CoveringDimLE 1 (earringCircle k) :=
-  coveringDimLE_one_of_interior_eq_empty _ (isCompact_earringCircle k) (interior_earringCircle k)
+  coveringDimLE_one_of_finite_sphere _ fun x _ r hr =>
+    ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, finite_earringCircle_inter_sphere k x _⟩
 
 /-- The base point `(0, 0)` of the circle `C₀`. -/
 def circleBase : earringCircle 0 := ⟨(0, 0), zero_mem_earringCircle 0⟩
@@ -344,8 +358,7 @@ equivalent to any space with non-empty wild set (in particular to any of the pap
 between homotopy types of one-dimensional Peano continua with a countable weak model and compact
 countable ordinals is not a bijection: `[λ] ↦ Ho(A_λ)` reaches neither homotopy type (and `w` does
 not separate them). (Informally, by the cited results, both sets have cardinality `ℵ₁`, so some
-bijection exists; it is the canonical one that fails.) Axioms: only
-`coveringDimLE_one_of_interior_eq_empty`. -/
+bijection exists; it is the canonical one that fails.) Axioms: none beyond Lean's. -/
 theorem thm1_2_counterexample :
     (CompactSpace Unit ∧ ConnectedSpace Unit ∧ LocallyPathConnectedSpace Unit ∧
       CoveringDimLE 1 Unit ∧ wildSet Unit = ∅ ∧
@@ -414,10 +427,41 @@ theorem interior_earring : interior earring = ∅ := by
   exact not_isMeagre_of_isOpen isOpen_interior (nonempty_iff_ne_empty.2 h)
     (hM.mono interior_subset)
 
-/-- The earring is at most one-dimensional (via the textbook axiom on planar compacta with empty
-interior). -/
-theorem coveringDimLE_earring : CoveringDimLE 1 earring :=
-  coveringDimLE_one_of_interior_eq_empty _ isCompact_earring interior_earring
+/-- The circle `Cₖ` lies in the sup-metric ball of radius `2 rₖ` about the base point. -/
+theorem dist_zero_le_of_mem_earringCircle {k : ℕ} {y : ℝ × ℝ} (hy : y ∈ earringCircle k) :
+    dist y ((0, 0) : ℝ × ℝ) ≤ 2 * earringRadius k := by
+  have h : (y.1 - earringRadius k) ^ 2 + y.2 ^ 2 = earringRadius k ^ 2 := hy
+  have hr := earringRadius_pos k
+  rw [Prod.dist_eq, Real.dist_eq, Real.dist_eq]
+  dsimp only
+  rw [sub_zero, sub_zero]
+  refine max_le (abs_le.2 ⟨?_, ?_⟩) (abs_le.2 ⟨?_, ?_⟩) <;>
+    nlinarith [sq_nonneg y.2, sq_nonneg (y.1 - earringRadius k), sq_nonneg (y.2 - earringRadius k),
+      sq_nonneg (y.2 + earringRadius k)]
+
+/-- The earring is at most one-dimensional: about every point `x` there are arbitrarily small
+squares meeting it in finitely many points. Take a radius `ρ ≠ ‖x‖`; a circle `Cₖ` meeting
+`sphere x ρ` reaches distance `|‖x‖ - ρ| > 0` from the base point, so `rₖ ≥ |‖x‖ - ρ| / 2`, which
+holds for finitely many `k` only; and each circle meets the square in finitely many points. -/
+theorem coveringDimLE_earring : CoveringDimLE 1 earring := by
+  refine coveringDimLE_one_of_finite_sphere _ fun x _ r hr => ?_
+  set d := dist ((0, 0) : ℝ × ℝ) x with hd
+  obtain ⟨ρ, hρ, hρd⟩ : ∃ ρ ∈ Ioo 0 r, ρ ≠ d := by
+    by_cases h : d = r / 2
+    · exact ⟨r / 3, ⟨by positivity, by linarith⟩, by rw [h]; intro h'; linarith⟩
+    · exact ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩, Ne.symm h⟩
+  have hη : 0 < |d - ρ| / 2 := half_pos (abs_pos.2 (sub_ne_zero.2 (Ne.symm hρd)))
+  refine ⟨ρ, hρ, ((finite_le_earringRadius hη).biUnion
+    fun k _ => finite_earringCircle_inter_sphere k x ρ).subset ?_⟩
+  rintro y ⟨hy, hs⟩
+  obtain ⟨k, hk⟩ := mem_iUnion.1 hy
+  refine mem_iUnion₂.2 ⟨k, ?_, hk, hs⟩
+  show |d - ρ| / 2 ≤ earringRadius k
+  have h1 := dist_zero_le_of_mem_earringCircle hk
+  have h2 := abs_dist_sub_le ((0, 0) : ℝ × ℝ) y x
+  have h3 : dist y x = ρ := hs
+  rw [h3, ← hd, dist_comm ((0, 0) : ℝ × ℝ) y] at h2
+  linarith
 
 /-- **The wild set of the earring is its base point.** The base point is wild
 (`earringBase_mem_wildSet`). A point `x ≠ b₀` lies on a single circle `Cₖ` near `x`
@@ -532,15 +576,27 @@ instance contractibleSpace_planarArc : ContractibleSpace planarArc :=
 instance locallyPathConnectedSpace_planarArc : LocallyPathConnectedSpace planarArc :=
   locallyPathConnectedSpace_of_locJoin fun _ hp => Convex.locJoin convex_planarArc hp
 
-/-- The planar arc has covering dimension exactly `1` (the upper bound via the textbook axiom on
-planar compacta with empty interior). -/
+/-- The planar arc is at most one-dimensional: it meets every square about one of its points in
+at most two points. -/
+theorem coveringDimLE_planarArc : CoveringDimLE 1 planarArc :=
+  coveringDimLE_one_of_finite_sphere _ fun x hx r hr => ⟨r / 2, ⟨half_pos hr, half_lt_self hr⟩,
+    (toFinite ({(x.1 + r / 2, 0), (x.1 - r / 2, 0)} : Set (ℝ × ℝ))).subset fun y hy => by
+      obtain ⟨hy, hs⟩ := hy
+      have hy2 : y.2 = 0 := hy.2
+      have hx2 : x.2 = 0 := hx.2
+      rcases mem_sphere_prod_cases hs with h | h | h | h
+      · exact Or.inl (Prod.ext h hy2)
+      · exact Or.inr (Prod.ext h hy2)
+      · linarith
+      · linarith⟩
+
+/-- The planar arc has covering dimension exactly `1`. -/
 theorem coveringDim_planarArc : CoveringDimLE 1 planarArc ∧ ¬ CoveringDimLE 0 planarArc := by
-  refine ⟨coveringDimLE_one_of_interior_eq_empty _ isCompact_planarArc ?_,
+  refine ⟨coveringDimLE_planarArc,
     not_coveringDimLE_zero (a := ⟨(0, 0), ⟨le_rfl, zero_le_one⟩, rfl⟩)
       (b := ⟨(1, 0), ⟨zero_le_one, le_rfl⟩, rfl⟩) fun h => ?_⟩
-  · rw [planarArc, interior_prod_eq, interior_singleton, prod_empty]
-  · have := congrArg (fun p : planarArc => (p : ℝ × ℝ).1) h
-    norm_num at this
+  have := congrArg (fun p : planarArc => (p : ℝ × ℝ).1) h
+  norm_num at this
 
 /-- The planar arc has empty wild set: all its loops are null-homotopic. -/
 theorem wildSet_planarArc : wildSet planarArc = ∅ :=
@@ -565,8 +621,8 @@ theorem isEmpty_homotopyEquiv_earringCircle_of_simplyConnected (Y : Type*) [Topo
 
 /-- **Counterexample to Theorem 1.2 as stated, in dimension exactly one.** The planar circle `C₀`
 and the planar arc `[0, 1] × {0}` are Peano continua of covering dimension exactly `1`, with empty
-wild sets and finite weak models, which are not homotopy equivalent. Axioms: only
-`coveringDimLE_one_of_interior_eq_empty` (for the upper bounds on the dimension). -/
+wild sets and finite weak models, which are not homotopy equivalent. Axioms: none beyond
+Lean's. -/
 theorem thm1_2_counterexample_dim_one :
     (CompactSpace (earringCircle 0) ∧ ConnectedSpace (earringCircle 0) ∧
       LocallyPathConnectedSpace (earringCircle 0) ∧ CoveringDimLE 1 (earringCircle 0) ∧
@@ -583,5 +639,73 @@ theorem thm1_2_counterexample_dim_one :
     ⟨inferInstance, inferInstance, inferInstance, coveringDim_planarArc.1, coveringDim_planarArc.2,
       wildSet_planarArc, planarArc_finite_weq⟩,
     isEmpty_homotopyEquiv_earringCircle_of_simplyConnected planarArc⟩
+
+/-! ### 6. A continuum with uncountable wild set -/
+
+/-- The rational points of `[0, 1]`, a countable dense subset of `[0, 1]`. -/
+def ratIcc : Set ℝ := range ((↑) : ℚ → ℝ) ∩ Icc 0 1
+
+/-- `ratIcc` is countable. -/
+theorem countable_ratIcc : ratIcc.Countable := (countable_range _).mono inter_subset_left
+
+/-- `1 ∈ ratIcc`. -/
+theorem one_mem_ratIcc : (1 : ℝ) ∈ ratIcc := ⟨⟨1, by simp⟩, zero_le_one, le_rfl⟩
+
+/-- `0 ∈ ratIcc`. -/
+theorem zero_mem_ratIcc : (0 : ℝ) ∈ ratIcc := ⟨⟨0, by simp⟩, le_rfl, zero_le_one⟩
+
+/-- **A one-dimensional Peano continuum with uncountable wild set** (an instance of the "only if"
+direction of Theorem 1.1). The planar model with an earring attached at every rational point of
+`[0, 1] × {0}` (`exists_modelData_of_countable`): its attachment points are wild, the wild set is
+closed (`isClosed_wildSet`), so it contains the whole segment `[0, 1] × {0}`. -/
+theorem exists_peano_wildSet_not_countable :
+    ∃ (X : Type) (_ : MetricSpace X) (_ : CompactSpace X) (_ : ConnectedSpace X)
+      (_ : LocallyPathConnectedSpace X), CoveringDimLE 1 X ∧ ¬ (wildSet X).Countable := by
+  have : Countable ratIcc := countable_ratIcc.to_subtype
+  have : Nonempty ratIcc := ⟨⟨0, zero_mem_ratIcc⟩⟩
+  obtain ⟨D, hu⟩ := exists_modelData_of_countable ratIcc countable_ratIcc
+    ((isBounded_Icc (0 : ℝ) 1).subset inter_subset_right)
+  refine ⟨D.model, inferInstance, inferInstance, inferInstance, inferInstance,
+    D.coveringDimLE_model, fun hc => ?_⟩
+  have hL : 1 ≤ D.L := by
+    have := D.abs_u_le ⟨1, one_mem_ratIcc⟩
+    rw [hu] at this
+    simpa using this
+  -- the points of `[0, 1] × {0}`, as points of the model
+  let p : Icc (0 : ℝ) 1 → D.model := fun t =>
+    ⟨((t : ℝ), 0), D.seg_subset_model ⟨⟨by linarith [t.2.1], by linarith [t.2.2]⟩, rfl⟩⟩
+  have hp : ∀ t, p t ∈ wildSet D.model := by
+    intro t
+    refine (isClosed_wildSet D.model).closure_subset_iff.2 D.range_incl_subset_wildSet ?_
+    rw [Metric.mem_closure_iff]
+    intro ε hε
+    obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn (show max 0 ((t : ℝ) - ε) < min 1 ((t : ℝ) + ε) from
+      max_lt (lt_min zero_lt_one (by linarith [t.2.1])) (lt_min (by linarith [t.2.2])
+        (by linarith)))
+    rw [max_lt_iff] at hq1
+    rw [lt_min_iff] at hq2
+    let a : ratIcc := ⟨q, ⟨q, rfl⟩, hq1.1.le, hq2.1.le⟩
+    have hua : D.u a = q := hu a
+    refine ⟨D.incl a, ⟨a, rfl⟩, ?_⟩
+    show dist ((t : ℝ), (0 : ℝ)) (D.u a, 0) < ε
+    rw [hua, Prod.dist_eq, Real.dist_eq, Real.dist_eq, sub_self, abs_zero]
+    exact max_lt (abs_lt.2 ⟨by linarith, by linarith⟩) hε
+  have hsub : Icc (0 : ℝ) 1 ⊆ (fun z : D.model => (z : ℝ × ℝ).1) '' wildSet D.model :=
+    fun t ht => ⟨p ⟨t, ht⟩, hp _, rfl⟩
+  have := Set.Countable.mono hsub (hc.image _)
+  rw [Cardinal.Real.Icc_countable_iff] at this
+  linarith
+
+/-- **No countable model** (the "only if" direction of Theorem 1.1, instantiated): there is a
+one-dimensional Peano continuum with uncountable wild set, and by Theorem 1.1
+(`exists_countable_weq_iff`) it admits no weak homotopy equivalence to a countable space. -/
+theorem exists_no_countable_model :
+    ∃ (X : Type) (_ : MetricSpace X) (_ : CompactSpace X) (_ : ConnectedSpace X)
+      (_ : LocallyPathConnectedSpace X), CoveringDimLE 1 X ∧ ¬ (wildSet X).Countable ∧
+        ¬ ∃ (Y : Type) (_ : TopologicalSpace Y), Countable Y ∧
+          ∃ f : C(X, Y), IsWeakHomotopyEquivalence f := by
+  obtain ⟨X, _, _, _, _, hdim, hw⟩ := exists_peano_wildSet_not_countable
+  exact ⟨X, inferInstance, inferInstance, inferInstance, inferInstance, hdim, hw,
+    fun h => hw ((exists_countable_weq_iff X hdim).1 h)⟩
 
 end Peano.Sanity

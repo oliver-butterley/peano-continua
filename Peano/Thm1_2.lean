@@ -29,8 +29,8 @@ The corrected statement, for one-dimensional Peano continua with **non-empty** c
 * **surjectivity** (`exists_wildSet_homeomorph`): every non-empty countable compact metric space is
   the wild set of such a continuum, a planar model built in `Peano.Models` (a segment with an
   earring attached at each point of a copy of `K`; the repaired construction of the paper's `A_λ`,
-  `notes/checks/D.md`). Its one-dimensionality uses the textbook axiom
-  `coveringDimLE_one_of_interior_eq_empty`.
+  `notes/checks/D.md`). Its one-dimensionality is proved directly (the model is rim-finite,
+  `Peano.Dimension`), so this half uses no axiom beyond Lean's.
 
 So `X ↦ w(X)` is a bijection from homotopy types onto homeomorphism types of non-empty countable
 compact metric spaces: it lands there (`w(X)` is compact, `compactSpace_wildSet`, by Lemma 2.3),

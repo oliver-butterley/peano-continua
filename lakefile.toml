@@ -1,17 +1,32 @@
 name = "PeanoContinua"
 version = "0.1.0"
-defaultTargets = ["Peano"]
+defaultTargets = ["Peano", "PeanoPartA"]
 
 [leanOptions]
 autoImplicit = false
 
 [[require]]
 name = "mathlib"
-scope = "leanprover-community"
-rev = "v4.35.0"
+git = "https://github.com/leanprover-community/mathlib4"
+# The exact Mathlib commit pinned by the Tau Ceti commit below (its lake-manifest.json); the two
+# must agree. Bump both together.
+rev = "1b1ccf4b088b32fa3f23f2de1127433254a81e1e"
+
+# Tau Ceti (github.com/TauCetiProject/TauCeti), pinned. Only a few modules are imported (degree-one
+# Hurewicz), so Lake builds only their small import closure; never `lake build TauCeti`.
+[[require]]
+name = "TauCeti"
+git = "https://github.com/TauCetiProject/TauCeti"
+rev = "83b84968573c2006e41feafb2e28cec37c3421c6"
 
 # Brazas–Pavešić, countable models of one-dimensional Peano continua (notes in `notes/`).
 [[lean_lib]]
 name = "Peano"
 # Also build the audit files `Peano/Audit/*.lean`, which `Peano.lean` does not import.
 globs = ["Peano", "Peano.+"]
+
+# Part A (§2–3) and the paper's own proof of Lemma 6.4: a separate library with its own axioms
+# (`PeanoPartA/Axioms.lean`), so that `Peano` shows only the trust boundary of Theorems 1.1 and 1.2.
+[[lean_lib]]
+name = "PeanoPartA"
+globs = ["PeanoPartA", "PeanoPartA.+"]

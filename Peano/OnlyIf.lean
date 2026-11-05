@@ -29,8 +29,9 @@ Brazas–Pavešić (arXiv:2610.35875), §6.
 ## The proof of Lemma 6.4
 
 The paper's proof of Lemma 6.4 uses first homology (Lemmas 3.3, 3.4, 6.3, i.e. Part A); that
-route is formalised separately (`Peano.injOn_wildSet_of_paper` in `Peano.Lemma6_4Paper`, on top of
-`Peano.PartA`, with more cited axioms). The main development uses instead a homology-free
+route is formalised separately (`Peano.injOn_wildSet_of_paper` in `PeanoPartA.Lemma6_4Paper`, on top
+of
+`PeanoPartA.Lemmas`, with more cited axioms). The main development uses instead a homology-free
 argument using Theorem 6.1 (Eda, axiom `eda_exists_map_earring`) and Lemma 6.2 twice. Suppose
 `x₀ ≠ x₁` in `w(X)`, `f x₀ = f x₁`, with fully essential `g₀, g₁` based at `x₀, x₁`. Let
 `h : 𝔼 → Y` interleave `f ∘ g₀` (even circles) and `f ∘ g₁` (odd circles). Theorem 6.1 applied to

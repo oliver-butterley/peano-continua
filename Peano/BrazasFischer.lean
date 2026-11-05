@@ -35,7 +35,8 @@ The general construction `homeomorphOfMapsTo` builds a homeomorphism between sub
 `B ⊆ Y` from continuous maps `f : X → Y`, `g : Y → X` mapping `A` into `B` and `B` into `A` that
 are mutually inverse there. Brazas–Fischer's hypothesis is the discrete monodromy property; here
 it enters through their Proposition 9.13 and the axiom, whence the hypotheses metric,
-path-connected, covering dimension `≤ 1`; the spaces are in `Type` because the axiom is; compactness and local path-connectedness are not needed for the loop
+path-connected, covering dimension `≤ 1`; the spaces are in `Type` because the axiom is; compactness
+and local path-connectedness are not needed for the loop
 wild set. For `wildSet` (Definition 2.2) only `wildSet ⊆ loopWildSet` is used, so no first
 countability argument is needed either.
 -/
@@ -142,7 +143,8 @@ def wildSetHomeomorph : wildSet X ≃ₜ wildSet Y :=
 
 end HomotopyEquiv
 
-/-- **Brazas–Fischer, Theorem 9.15** (existence form): homotopy equivalent one-dimensional Peano continua have homeomorphic loop wild sets. -/
+/-- **Brazas–Fischer, Theorem 9.15** (existence form): homotopy equivalent one-dimensional Peano
+continua have homeomorphic loop wild sets. -/
 theorem nonempty_homeomorph_loopWildSet (X Y : Type) [MetricSpace X] [CompactSpace X]
     [ConnectedSpace X] [LocallyPathConnectedSpace X] [MetricSpace Y] [CompactSpace Y]
     [ConnectedSpace Y] [LocallyPathConnectedSpace Y] (hX : CoveringDimLE 1 X)

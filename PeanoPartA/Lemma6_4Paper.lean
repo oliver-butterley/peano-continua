@@ -1,6 +1,6 @@
 module
 
-public import Peano.PartA
+public import PeanoPartA.Lemmas
 public import Peano.OnlyIf
 
 /-!

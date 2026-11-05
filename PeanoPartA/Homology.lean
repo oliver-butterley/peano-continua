@@ -1,6 +1,6 @@
 module
 
-public import Peano.Reduced
+public import PeanoPartA.Reduced
 public import Mathlib.GroupTheory.Abelianization.Defs
 public import Mathlib.Topology.Subpath
 public import Mathlib.AlgebraicTopology.FundamentalGroupoid.FundamentalGroup
@@ -11,12 +11,16 @@ public import Mathlib.Analysis.Convex.PathConnected
 
 Infrastructure for Part A (§3) of Brazas–Pavešić (arXiv:2610.35875).
 
-* **Homology model.** Mathlib's singular homology has no Hurewicz map and no homology class of a
-  loop, so `H₁` of a path-connected space is modelled by `Abelianization (FundamentalGroup X x)`
-  (Hurewicz theorem, Hatcher, *Algebraic Topology*, Thm 2A.1). "`[α]_h = 0`" for a loop `α` at `x`
-  is `FundamentalGroup.fromPath ⟦α⟧ ∈ commutator (FundamentalGroup X x)`, equivalently
-  `Abelianization.of (fromPath ⟦α⟧) = 1` (`mem_commutator_iff_abelianization_of_eq_one`); this is
-  also the form in which the cited axiom `Peano.eda_zeroForm` is stated.
+* **Homology model.** The paper's `H₁` is first singular homology with integer coefficients. It is
+  formalised as such in `PeanoPartA.SingularH1` (`Peano.singularH1`, the class `Peano.h1Class` of a
+  loop), through Tau Ceti's degree-one Hurewicz theorem `π₁(X, x)^ab ≃+ H₁(X; ℤ)`; the Part A
+  lemmas are restated there with genuine singular homology (`PeanoPartA.SingularH1Lemmas`). The
+  *working model* of the proofs, set up in this file, is the abelianised fundamental group:
+  "`[α]_h = 0`" for a loop `α` at `x` is
+  `FundamentalGroup.fromPath ⟦α⟧ ∈ commutator (FundamentalGroup X x)`, equivalently
+  `Abelianization.of (fromPath ⟦α⟧) = 1` (`mem_commutator_iff_abelianization_of_eq_one`), and
+  agrees with `h1Class α = 0` for path-connected `X` (`Peano.h1Class_eq_zero_iff`); this is also
+  the form in which the cited axiom `Peano.eda_zeroForm` is stated.
 * **Different base points.** Loops `α` at `x₀` and `β` at `x₁` are `IsHomologous` if, for some path
   `p : x₀ → x₁`, `α` and the conjugate `p β p⁻¹` have the same image in the abelianisation at `x₀`.
   The choice of `p` does not matter (`abelianization_of_conj_eq`): two choices differ by
@@ -25,7 +29,8 @@ Infrastructure for Part A (§3) of Brazas–Pavešić (arXiv:2610.35875).
   (`IsHomologous.refl`, `.symm`, `.trans`). It is `False` for base points in different path
   components (there is no path `p`), unlike equality of classes in singular `H₁`; every use is in a
   path-connected space, where it is equality of homology classes in `H₁(X)`
-  (`isHomologous_iff_homologyClass_eq`). Conjugation `p γ p⁻¹` is Mathlib's change of base point
+  (`isHomologous_iff_homologyClass_eq`; in singular `H₁`, `Peano.isHomologous_iff_h1Class_eq`).
+  Conjugation `p γ p⁻¹` is Mathlib's change of base point
   `fundamentalGroupMulEquivOfPath p⁻¹` (`fundamentalGroupMulEquivOfPath_symm_fromPath`), a group
   isomorphism, so it preserves and reflects membership in the commutator subgroup
   (`conj_mem_commutator_iff`).
@@ -34,7 +39,8 @@ Infrastructure for Part A (§3) of Brazas–Pavešić (arXiv:2610.35875).
   (`fundamentalGroup_fromPath_trans`, by `rfl`). Nothing here depends on this: the commutator
   subgroup and the abelianisation are invariant under passing to the opposite group, and all
   computations below happen in the abelianisation.
-* **The abelian line integral** `Peano.Homology.abLine x`, in a path-connected space: fixing a path
+* **The abelian line integral** `PeanoPartA.Homology.abLine x`, in a path-connected space: fixing a
+path
   `c u` from the base point `x` to every point `u` (`PathConnectedSpace.somePath`), a path class
   `P : u → v` is sent to the class of `c u · P · (c v)⁻¹` in the abelianisation. It is
   multiplicative under concatenation (`abLine_trans`), inverts under reversal (`abLine_symm`), is a
@@ -44,7 +50,8 @@ Infrastructure for Part A (§3) of Brazas–Pavešić (arXiv:2610.35875).
   of a loop `γ` at any point, written additively; it may be computed with any connecting path
   (`homologyClass_eq`), vanishes iff `γ` is null-homologous (`homologyClass_eq_zero_iff`), is
   additive (`homologyClass_trans_conj`, `homologyClass_symm`), and two loops are homologous iff
-  their classes agree (`isHomologous_iff_homologyClass_eq`).
+  their classes agree (`isHomologous_iff_homologyClass_eq`). The Hurewicz isomorphism sends it to
+  the singular class `h1Class γ` (`Peano.hurewiczHomologyAddEquiv_homologyClass`).
 * **0-forms are null-homologous in any space** (`fromPath_mem_commutator_of_isZeroFormCut`; the
   direction of Lemma 3.2 that the paper uses as "obvious", see `notes/checks/A.md`, A-3.1).
   First in a path-connected space: the line integral is invariant under increasing
@@ -57,7 +64,8 @@ Infrastructure for Part A (§3) of Brazas–Pavešić (arXiv:2610.35875).
   the subtype `S`; `Peano.homotopic_of_map_mem` builds a homotopy in `S` from a homotopy in `X`
   whose values lie in `S`.
 
-The pieces of a 0-form are given by `Peano.subpathMap` (`Peano.Reduced`), which agrees pointwise
+The pieces of a 0-form are given by `Peano.subpathMap` (`PeanoPartA.Reduced`), which agrees
+pointwise
 with Mathlib's `Path.subpath` (`subpathMap_apply_eq_subpath`).
 -/
 

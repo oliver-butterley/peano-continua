@@ -20,9 +20,11 @@ one-dimensional: for the earring `𝔼` and `Y = 𝔼 × I`,
   `w(𝔼 × I)` (`not_surjOn_wildSet_earringProdHomotopyEquiv`), and `w(𝔼 × I)` is even uncountable
   (`not_countable_wildSet_earring_prod`).
 
-A further comment (not in the paper's remark; `notes/checks/D.md` notes the example is Brazas–Fischer's
+A further comment (not in the paper's remark; `notes/checks/D.md` notes the example is
+Brazas–Fischer's
 Remark 9.16): one-dimensionality of *both* spaces matters in Brazas–Fischer,
-Theorem 9.15 (`Peano.nonempty_homeomorph_loopWildSet`, proved in `Peano.BrazasFischer`: homotopy equivalent
+Theorem 9.15 (`Peano.nonempty_homeomorph_loopWildSet`, proved in `Peano.BrazasFischer`: homotopy
+equivalent
 one-dimensional Peano continua have homeomorphic wild sets): `𝔼` and `𝔼 × I` are homotopy
 equivalent Peano continua whose wild sets are not even equinumerous. (That `𝔼 × I` is a Peano
 continuum of dimension `2` is not formalised: Mathlib has neither products of locally
