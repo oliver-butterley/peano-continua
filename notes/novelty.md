@@ -35,8 +35,8 @@ London Mathematical Society*. Paper numbering (L = Lemma, T = Theorem, C = Corol
 | 5d | L4.5 (topology of a standard-form continuum by conditions (1)–(3)) | **Routine adaptation** of the "shrinking point-attachment space" topology in Brazas–Mitra 2025. Conditions (1)–(3) have the same form there, and the compactness proof follows the same pattern. | arXiv:2505.23665 Def. 5.5, Prop. 5.9 [opened] | High |
 | 5e | L2.5 (`π₁`-injective maps preserve wild points) | **Known**, and given without citation. | Brazas–Mitra 2025 Lemma 4.2 (n = 1) [opened]; arXiv:2510.22901 Lemma 3.7 [opened]; first step of the proof of Brazas–Fischer Thm 9.15 [opened] | High |
 | 5f | L2.3, R2.7, L2.8, L3.2, T4.2, T6.1, L6.2, T6.6 | **Cited** results. Three citation issues: T6.6 omits "non-empty"; L6.2 is cited to Brazas–Fischer Prop. 9.13, but the statement is really Lemma 9.17 + Prop. 9.13; T4.2 omits `w(X) ≠ ∅`. | see §5 | High |
-| 6 | The question "which Peano continua are weakly homotopy equivalent to countable spaces?" | **No earlier formulation found.** Context: McCord/Stong (finite and A-space models) answer it for spaces with countable homotopy groups. Brazas–Matos give the first countable non-A-space with uncountable `π₁`. Karimov–Repovš give a non-contractible Peano continuum that is weakly contractible, so it trivially has a one-point model. | McCord 1966, Stong 1966, Barmak 2011 [recalled; cited in the paper]; Brazas–Matos [opened]; Karimov–Repovš [PAMS 138 (2010)](https://www.ams.org/journals/proc/2010-138-04/S0002-9939-09-10217-4) [abstract via search]; [wildtopology.com problem list](https://wildtopology.com/problemlist/) [opened] | Medium |
-| 7 | Later versions, errata, citing papers | Only v1 exists. No errata. No citing paper found. The authors' later preprint arXiv:2608.16780 (Conner–Herfort–Kent–Pavešić, 17 Aug 2026) does not cite it. | [arXiv abstract page](https://arxiv.org/abs/2610.35875) [opened]; arXiv API author listings [opened] | Medium (Google Scholar not directly queryable) |
+| 6 | The question "which Peano continua are weakly homotopy equivalent to countable spaces?" | **No earlier formulation found.** Context: McCord/Stong (finite and A-space models) answer it for spaces with countable homotopy groups. Brazas–Matos give the first countable non-A-space with uncountable `π₁`. Karimov–Repovš give a non-contractible Peano continuum that is weakly contractible, so it trivially has a one-point model. | McCord 1966, Stong 1966, Barmak 2011 [recalled; cited in the paper]; Brazas–Matos [opened]; Karimov–Repovš [PAMS (Proceedings of the American Mathematical Society) 138 (2010)](https://www.ams.org/journals/proc/2010-138-04/S0002-9939-09-10217-4) [abstract via search]; [wildtopology.com problem list](https://wildtopology.com/problemlist/) [opened] | Medium |
+| 7 | Later versions, errata, citing papers | Only v1 exists. No errata. No citing paper found. The authors' later preprint arXiv:2608.16780 (Conner–Herfort–Kent–Pavešić, 17 Aug 2026) does not cite it. | [arXiv abstract page](https://arxiv.org/abs/2610.35875) [opened]; arXiv API (application programming interface) author listings [opened] | Medium (Google Scholar not directly queryable) |
 
 ## Item 1: Theorem 1.1
 
@@ -247,7 +247,7 @@ are not wrong as far as I checked, but the main theorem does not need them.
   (Brazas–Fischer Prop. 9.13(b); arXiv:2510.22901 Lemma 4.14) that essential, freely homotopic loops
   in a one-dimensional metric space cannot have disjoint images. Probably new as stated; not
   needed (item 4).
-- **L4.3** (`diam Oₙ → 0`). Not found. I could not access Meilstrup's thesis (BYU ScholarsArchive
+- **L4.3** (`diam Oₙ → 0`). Not found. I could not access Meilstrup's thesis (BYU (Brigham Young University) ScholarsArchive
   blocks automated download) or Eda 2010. The argument is standard continuum theory and depends on
   each `Oₙ` having a two-point boundary. The general statement "components of `X \ K` form a null
   family" is **false** in Peano continua: take strips in a square. So the lemma is not a direct
@@ -275,11 +275,11 @@ are not wrong as far as I checked, but the main theorem does not need them.
   - every finite space has the weak homotopy type of a finite polyhedron, and conversely;
   - more generally, every simplicial complex `K` is weakly equivalent to the A-space of its
     simplices, which is countable when `K` is.
-  - Combined with CW approximation [recalled], every space with countably many path components and
+  - Combined with CW (cell-complex) approximation [recalled], every space with countably many path components and
     countable homotopy groups has a countable A-space model. Countable A-spaces have countable
     homotopy groups (the paper says this).
   - So the question is open only for spaces with an uncountable homotopy group.
-- **Barmak 2011 (LNM 2032); Barmak–Minian, minimal finite models** ([arXiv:math/0611156](https://arxiv.org/abs/math/0611156)) [search snippet]: minimal *finite* models. They do not address countable models of non-polyhedra.
+- **Barmak 2011 (LNM, Lecture Notes in Mathematics, 2032); Barmak–Minian, minimal finite models** ([arXiv:math/0611156](https://arxiv.org/abs/math/0611156)) [search snippet]: minimal *finite* models. They do not address countable models of non-polyhedra.
 - **Brazas–Matos 2019** [opened]: the first countable, compact, `T₀`, locally path-connected space
   with uncountable `π₁`. Their remark that "countable spaces need not be weakly homotopy equivalent
   to countable simplicial complexes" is the closest earlier statement. They do not ask which

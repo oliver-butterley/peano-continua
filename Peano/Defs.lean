@@ -79,6 +79,8 @@ def earringParam (k : ℕ) (t : ℝ) : ℝ × ℝ :=
   (earringRadius k - earringRadius k * Real.cos (2 * Real.pi * t),
     earringRadius k * Real.sin (2 * Real.pi * t))
 
+/-- `earringParam k t` lies on the earring (on its `k`-th circle; the finer statement is
+`earringParam_mem_earringCircle` in `Peano.Earring`). -/
 lemma earringParam_mem (k : ℕ) (t : ℝ) : earringParam k t ∈ earring :=
   mem_iUnion.2 ⟨k, by
     simp only [earringCircle, earringParam, mem_ofPred_eq]
@@ -97,7 +99,13 @@ def earringLoop (k : ℕ) : Path earringBase earringBase where
 /-! ### Wild sets -/
 
 /-- Definition 2.1: a map `f : 𝔼 → X` is *fully essential* if every loop `f ∘ ℓₖ` is essential,
-i.e. not homotopic rel endpoints to the constant loop. -/
+i.e. not homotopic rel endpoints to the constant loop.
+
+Based versus free: the paper calls a loop essential if it is not null-homotopic, without saying
+whether the homotopy fixes the base point. For loops the two notions agree: a loop is freely
+homotopic to a constant loop iff it is null-homotopic rel endpoints (a free null-homotopy makes the
+loop homotopic rel endpoints to a conjugate `p · const · p⁻¹`, which is trivial). So the based
+version used here is no restriction. -/
 def FullyEssential {X : Type*} [TopologicalSpace X] (f : C(earring, X)) : Prop :=
   ∀ k, ¬ ((earringLoop k).map f.continuous).Homotopic (Path.refl (f earringBase))
 
@@ -114,6 +122,7 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 def GenLoop.map {N : Type*} (f : C(X, Y)) {x : X} (γ : Ω^ N X x) : Ω^ N Y (f x) :=
   ⟨f.comp γ.1, fun y hy => by simp [γ.2 y hy]⟩
 
+/-- Post-composition with `f` preserves homotopy of generalised loops (rel `∂Iⁿ`). -/
 lemma GenLoop.map_homotopic {N : Type*} (f : C(X, Y)) {x : X} {γ δ : Ω^ N X x}
     (h : GenLoop.Homotopic γ δ) : GenLoop.Homotopic (GenLoop.map f γ) (GenLoop.map f δ) := by
   obtain ⟨H⟩ := h

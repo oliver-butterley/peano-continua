@@ -2,7 +2,7 @@
 
 Scope: Lemma 6.3, Lemma 6.4, Remark 6.5, proof of Theorem 1.1 (both directions), proof of Theorem 1.2, and the way the cited results (Theorem 6.1 = Eda 2002, Lemma 6.2 = Brazas–Fischer 2020 Prop. 9.13, Theorem 6.6 = Eda 2022, Brazas–Fischer 2020 Thm. 9.15, Meilstrup's Theorem 4.2) are quoted and applied. Sections 2–5 are taken as given.
 
-Sources consulted: the paper's text and PDF (pp. 10–13); Brazas–Fischer, arXiv:1902.08887v2 (= ref. [5]), Section 9, read in full; the abstract of Eda 2022 (Fund. Math. 259) on the IMPAN site; a secondary quotation of Eda's 2002 theorem in C. Kent, arXiv:1305.4215. I could **not** access Eda 2002 (Topology Appl. 123) or Meilstrup's thesis. Statements about them marked "(memory)" rely on my recollection or on the secondary source.
+Sources consulted: the paper's text and PDF (pp. 10–13); Brazas–Fischer, arXiv:1902.08887v2 (= ref. [5]), Section 9, read in full; the abstract of Eda 2022 (Fund. Math. 259) on the IMPAN (Institute of Mathematics, Polish Academy of Sciences) site; a secondary quotation of Eda's 2002 theorem in C. Kent, arXiv:1305.4215. I could **not** access Eda 2002 (Topology Appl. 123) or Meilstrup's thesis. Statements about them marked "(memory)" rely on my recollection or on the secondary source.
 
 ## Verdict
 

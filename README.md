@@ -42,5 +42,14 @@ The build prints the axioms each key theorem depends on (from `Peano/Audit/`). C
 
 ## Status
 
-§4–5 and the "if" direction of Theorem 1.1 are fully formalised, with no `sorry`. See
-`notes/README.md` and `notes/lean-map.md`.
+Every numbered result of the paper is formalised, with no `sorry`, except Remark 5.3 and the ordinal
+phrasing of Theorem 1.2; some lemmas are proved in a narrower setting than stated, which is enough
+for the main theorems (`notes/README.md`).
+- Theorem 1.1, both directions, including the case `w(X) = ∅` that the paper's proof misses.
+- Theorem 1.2 in corrected form (non-empty wild sets). As stated, the canonical bijection claimed by
+  the paper is not one (the circle has a countable model but is not homotopy equivalent to any of
+  the paper's models `A_λ`), because the cited Theorem 6.6 needs non-empty wild sets; this is
+  formalised too.
+
+The trust boundary is a short list of cited theorems and one textbook fact of dimension theory
+(`notes/axioms.md`). See `notes/README.md` and `notes/lean-map.md`.

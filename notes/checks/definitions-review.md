@@ -1,5 +1,9 @@
 # Independent review of definitions and statements (Peano/*.lean)
 
+> **Historical (2026-10-28).** Written when only §4–5 and Theorem 1.1 ("if", `w ≠ ∅`) were
+> formalised. The case `w(X) = ∅` is now covered; later definitions (`loopWildSet`, `IsReducedPath`,
+> `IsReparam`, `IsZeroFormCut`, `IsHomologous`) were reviewed in `reviews-2026-11-05.md`.
+
 Reviewed: `Peano/Defs.lean`, `Peano/StandardForm.lean`, `Peano/Coarsify.lean`,
 `Peano/WeakEquiv.lean`, `Peano/Main.lean` against Brazas–Pavešić, arXiv:2610.35875 (closures
 checked in the PDF, pp. 5–7). Axiom files not reviewed. All five files elaborate without errors

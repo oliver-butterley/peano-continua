@@ -337,6 +337,16 @@ shorter proof exists and also removes an unnecessary hypothesis.
 
 ---
 
+> **Status (2026-11-05).** A-3.3-1 is closed in Lean: the general Lemma 3.3 is
+> `Peano.fromPath_mem_commutator_of_sum_eq_zero` (`Peano/Lemma3_3General.lean`), proved by merging
+> loops and Lemma 3.4 rather than by the arc tree above. Lemma 3.4 is proved by the two-line proof
+> of item 7 (A-3.4-5).
+>
+> **Eda 2016 read (2026-11-05).** A-3.1-1: Eda's Definition 3.4 pairs pieces up to `≡` (an increasing
+> homeomorphism), so the paper's exact "=" is a misquote; the Lean encoding follows Eda. A-3.2: Eda's
+> Lemma 3.6 is stated for one-dimensional (metric) spaces, not only Peano continua, so the paper's
+> scope is supported.
+
 ## Summary of findings
 
 | ID | Result | Label | One line |

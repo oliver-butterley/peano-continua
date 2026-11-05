@@ -18,13 +18,12 @@ open Topology
 
 namespace Peano
 
-/-- A homotopy equivalence is a weak homotopy equivalence (Hatcher, *Algebraic Topology*,
-Proposition 1.18 for `π₁` and §4.1, p. 342, for `πₙ`; the proof transports along the homotopy
-`g ∘ f ≃ id` with the change-of-basepoint isomorphisms). Assumed because Mathlib has neither
-induced maps on `πₙ` nor change of basepoint for `πₙ`, `n ≥ 2`. Used in the paper's proof of
-Theorem 1.1 when it replaces `X` by a standard-form continuum. -/
-axiom HomotopyEquiv.isWeakHomotopyEquivalence {X Y : Type*} [TopologicalSpace X]
-    [TopologicalSpace Y] (e : ContinuousMap.HomotopyEquiv X Y) :
-    IsWeakHomotopyEquivalence e.toFun
+/-- **Planar sets with empty interior are at most one-dimensional** (Hurewicz–Wallman, *Dimension
+Theory*, Theorem IV.3: a subset of `ℝⁿ` has dimension `n` iff it contains a non-empty open subset
+of `ℝⁿ`; and Theorem V.8: for separable metric spaces the covering dimension equals the inductive
+dimension). Assumed because Mathlib has no covering dimension theory. Used to see that the model
+continua `A_K` of Theorem 1.2 are one-dimensional. Stated only for compact sets, the case used. -/
+axiom coveringDimLE_one_of_interior_eq_empty (A : Set (ℝ × ℝ)) (hA : IsCompact A)
+    (hint : interior A = ∅) : CoveringDimLE 1 A
 
 end Peano

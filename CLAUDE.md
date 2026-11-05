@@ -32,5 +32,5 @@ is in `notes/lean-map.md`; the axioms are in `notes/axioms.md`.
 
 ## Git
 
-- Claude commits on its own branch `dev/claude` at natural completion points, as the configured
-  user and without attribution trailers. Never push. The user merges to `master` themselves.
+- Claude commits at natural completion points, as the configured user and without attribution
+  trailers. Never push.

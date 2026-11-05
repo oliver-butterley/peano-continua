@@ -63,6 +63,7 @@ def label (x : X) : X ⊕ (S.ι × Bool) :=
 /-- The coarsification `𝒞X`: the quotient of `X` by the fibres of `label`. -/
 def Coarse : Type _ := Quotient (Setoid.ker S.label)
 
+/-- The coarsification carries the quotient topology. -/
 instance : TopologicalSpace S.Coarse := inferInstanceAs (TopologicalSpace (Quotient _))
 
 /-- The coarsification map `q : X → 𝒞X`. -/
@@ -647,11 +648,11 @@ lemma liftFun_of_mem_core {Φ : S.ι × Bool → C(B, I)} {k : B → X} {b : B}
 
 end Lift
 
-
-variable [CompactSpace X] [LocallyPathConnectedSpace X]
-
-/-- **Remark 5.1.** If `W` is countable then `𝒞X` is countable. -/
-theorem countable_coarse (hW : S.W.Countable) : Countable S.Coarse := by
+/-- **Remark 5.1.** If `W` is countable then `𝒞X` is countable. The paper's setting (a compact
+metric space) is separable; separability is all the proof uses (it makes the family of disjoint
+open arcs countable). -/
+theorem countable_coarse [TopologicalSpace.SeparableSpace X] (hW : S.W.Countable) :
+    Countable S.Coarse := by
   have hι : (univ : Set S.ι).Countable :=
     PairwiseDisjoint.countable_of_isOpen (s := S.arc) (fun i _ j _ hij => S.disjoint hij)
       (fun i _ => S.isOpen_arc i) (fun i _ => ⟨_, midI, midI_mem_openUnit, rfl⟩)
@@ -675,6 +676,29 @@ theorem countable_coarse (hW : S.W.Countable) : Countable S.Coarse := by
     · exact Or.inr ⟨p, rfl⟩
   exact countable_univ_iff.1
     ((((hW.image _).union (countable_range _)).union (countable_range _)).mono hsub)
+
+/-- For finitely many arcs and finite `W` the coarsification is finite (the finite-graph case of
+Theorem 1.1). -/
+theorem finite_coarse [Finite S.ι] (hW : S.W.Finite) : Finite S.Coarse := by
+  have hsub : (univ : Set S.Coarse) ⊆
+      (S.q '' S.W ∪ range (fun i => S.q (S.h i midI))) ∪ range S.pt := by
+    intro y _
+    rcases S.exists_core_or_eq_pt y with ⟨x, hx, rfl⟩ | ⟨p, rfl⟩
+    · by_cases hxW : x ∈ S.W
+      · exact Or.inl (Or.inl ⟨x, hxW, rfl⟩)
+      · have : x ∈ ⋃ i, S.h i '' openUnit := S.iUnion_eq ▸ hxW
+        obtain ⟨i, u, hu, rfl⟩ := mem_iUnion.1 this
+        rcases lt_trichotomy (u : ℝ) (1 / 2) with h | h | h
+        · have hm : S.h i u ∈ S.firstHalf i := mem_image_of_mem _ ⟨hu.1, h⟩
+          rw [firstHalf_eq_half] at hm
+          exact absurd hm (hx _)
+        · exact Or.inl (Or.inr ⟨i, by rw [show u = midI from Subtype.ext h]⟩)
+        · have hm : S.h i u ∈ S.secondHalf i := mem_image_of_mem _ ⟨h, hu.2⟩
+          rw [secondHalf_eq_half] at hm
+          exact absurd hm (hx _)
+    · exact Or.inr ⟨p, rfl⟩
+  exact Set.finite_univ_iff.1
+    ((((hW.image _).union (finite_range _)).union (finite_range _)).subset hsub)
 
 /-- **Lemma 5.2.** The coarsification map is open. -/
 theorem isOpenMap_q : IsOpenMap S.q := S.isOpenMap_q_aux

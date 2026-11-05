@@ -1,5 +1,9 @@
 # Adversarial review of the axioms (Peano formalisation)
 
+> **Historical (2026-10-28).** This review covers the first four axioms. Since then
+> `isClosed_wildSet` and `HomotopyEquiv.isWeakHomotopyEquivalence` became theorems, and new axioms were
+> added and reviewed; see `../axioms.md` and `reviews-2026-11-05.md`.
+
 Reviewer: an independent agent, which did not read the project's own assessments under `notes/`.
 Files reviewed: `Peano/Axioms/Cited.lean`, `Peano/Axioms/Standard.lean` and `Peano/Defs.lean`.
 Sources were downloaded to `papers/dl_bm/`, `papers/dl_bf/` and `papers/dl_mp/` (gitignored).
@@ -196,7 +200,7 @@ summarised in the proof given after Corollary 9.18:
   countability of w across the Meilstrup equivalence). Lemma 6.4 of the paper would also give
   injectivity of h|w(X′) without this axiom, but that route needs Eda's Theorem 6.1, so this choice
   is economical.
-- **MINOR (bibliography).** The Bull. LMS volume is given as 52 in the paper and 50 on Brazas's web
+- **MINOR (bibliography).** The Bull. LMS (London Mathematical Society) volume is given as 52 in the paper and 50 on Brazas's web
   page. The paper's 52 is correct (2020, no. 6, 1072–1092). The docstring is fine.
 
 ---

@@ -12,7 +12,8 @@ used for §4 and §5: a closed set `W ⊆ X` whose complement is a disjoint unio
 Design choice: the arguments of §4 and §5 never use one-dimensionality nor the definition of the
 wild set through the earring (confirmed by the checks `notes/checks/B.md`, `C.md`), so they are
 stated for an `ArcSystem`; a standard-form continuum gives one with `W = w(X)`
-(`IsStandardForm.exists_arcSystem` in `Peano.Main`, using the cited Lemma 2.3). This file holds
+(`IsStandardForm.exists_arcSystem` in `Peano.Main`, using Lemma 2.3, proved as
+`isClosed_wildSet` in `Peano.WildSet`). This file holds
 only definitions, so that §4 (`Peano.StandardForm`) and §5 (`Peano.Coarsify`) can be developed
 independently.
 

@@ -9,6 +9,8 @@ the infinite earring `𝔼`, that is, a map that is essential on every circle (D
 *weak homotopy equivalence* induces a bijection on `π₀` and isomorphisms on every `πₙ`, at every
 basepoint (Definition 2.4).
 
+Labels: Def = definition, L = lemma, R = remark, T = theorem, C = corollary.
+
 ## Main results
 
 - **Theorem 1.1.** Let `X` be a one-dimensional Peano continuum. There is a countable space `Y` and
@@ -87,7 +89,8 @@ T4.2 ─────────────────────────
 T1.1, T6.6, [5, Thm 9.15], ordinal fact ─► T1.2
 ```
 
-## Formalisation scope (decision of 2026-10-28)
+## Formalisation scope
 
-Lean covers Parts B and C and the "if" direction of Theorem 1.1. Parts A and D, the "only if"
-direction and Theorem 1.2 are checked informally only. See `lean-map.md`.
+Decision of 2026-10-28: Lean covers Parts B and C and the "if" direction of Theorem 1.1. Extended on
+2026-11-05 to the whole paper (Parts A–D, both directions of Theorem 1.1, corrected Theorem 1.2,
+Remark 6.5); see `README.md` (status, and what is not formalised) and `lean-map.md`.

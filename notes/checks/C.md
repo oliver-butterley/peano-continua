@@ -1,5 +1,10 @@
 # Part C referee check: Section 5 of Brazas–Pavešić, "Countable models of one-dimensional Peano continua" (arXiv:2610.35875)
 
+> **Correction (2026-11-05).** This check read the text extraction, which drops the closure bars in
+> Lemma 4.5. With the closures of the PDF (`Ōₙ`) the lemma is true; it is proved in Lean as
+> `Peano.ArcSystem.isOpen_iff_localCondition`. The statements below that Lemma 4.5 is false, and its
+> counterexample, apply only to the misread version.
+
 Scope: the coarsification construction 𝒞X and q : X → 𝒞X, Remark 5.1, Lemma 5.2, Remark 5.3,
 Lemma 5.4, Lemma 5.5, Corollary 5.6. Section 4 was taken as given except where its application
 had to be checked. Notation used below: W = w(X) (the wild set), F = W ∪ {cₙ : n ∈ N},
