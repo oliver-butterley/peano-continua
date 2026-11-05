@@ -7,7 +7,7 @@ import Peano
 
 Restates the extension lemmas, the lifting lemma and Corollary 5.6 (for an arbitrary `ArcSystem`,
 the abstract form of a standard-form continuum), and the arc system of a standard-form continuum,
-with `recall`, then prints their axioms.
+with `recall`, then checks their axioms with `#guard_msgs` (the build fails if the list changes).
 
 Expected axioms for all: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
@@ -46,11 +46,43 @@ recall Peano.ArcSystem.finite_weq_q_of_finite {X : Type*} [MetricSpace X] [Compa
     (S : ArcSystem X) [Finite S.ι] (hW : S.W.Finite) :
     Finite S.Coarse ∧ IsWeakHomotopyEquivalence S.q
 
+/--
+info: 'Peano.ArcSystem.exists_extension_preimage_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.exists_extension_preimage_eq
+/--
+info: 'Peano.ArcSystem.exists_extension_interior' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.exists_extension_interior
+/--
+info: 'Peano.IsStandardForm.exists_arcSystem' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.IsStandardForm.exists_arcSystem
+/--
+info: 'Peano.ArcSystem.exists_lift' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.exists_lift
+/--
+info: 'Peano.ArcSystem.countable_weq_q' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.countable_weq_q
+/--
+info: 'Peano.ArcSystem.finite_weq_q_of_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.finite_weq_q_of_finite
+/--
+info: 'Peano.ArcSystem.isSerreFibration_q' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.isSerreFibration_q
+/--
+info: 'Peano.ArcSystem.isWeakHomotopyEquivalence_q' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.ArcSystem.isWeakHomotopyEquivalence_q

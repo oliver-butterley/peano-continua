@@ -21,10 +21,12 @@ is in `notes/lean-map.md`; the axioms are in `notes/axioms.md`.
   for textbook facts missing from Mathlib) and, for Part A only, `PeanoPartA/Axioms.lean`. Every
   axiom:
   - is listed in `notes/axioms.md`;
-  - is printed by `Peano/Audit/Axioms.lean` (or `PeanoPartA/Audit.lean`);
+  - is checked by `Peano/Audit/Axioms.lean` (or `PeanoPartA/Audit.lean`);
   - gets an adversarial review before anything depends on it.
-- Key statements are restated with `recall` and `#print axioms` in `Peano/Audit/`. A change to a
+- Key statements are restated with `recall`, and their axioms checked with
+  `#guard_msgs in #print axioms`, in `Peano/Audit/`. A change to a
   frozen statement must be mirrored there.
+- `lake build` must be silent: no info, no warning. Use `#guard_msgs` for any command that prints.
 
 ## Notes
 

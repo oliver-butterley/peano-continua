@@ -6,7 +6,8 @@ import Peano
 # Audit: Theorem 1.1 and Lemma 6.4
 
 Restates Brazas–Pavešić, Theorem 1.1 (both directions) and Lemma 6.4 in full with `recall` (which
-fails unless the restatement matches the proved declaration), then prints their axioms.
+fails unless the restatement matches the proved declaration), then checks their axioms with
+`#guard_msgs` (the build fails if the list changes).
 
 Expected axioms (besides `propext`, `Classical.choice`, `Quot.sound`):
 * `exists_countable_weq_of_standardForm`: none.
@@ -63,10 +64,64 @@ recall Peano.countable_wildSet_of_weq (X : Type) [MetricSpace X] [CompactSpace X
     [TopologicalSpace Y] [Countable Y] {f : C(X, Y)} (hf : IsWeakHomotopyEquivalence f) :
     (wildSet X).Countable
 
+/--
+info: 'Peano.exists_countable_weq_of_standardForm' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_countable_weq_of_standardForm
+/--
+info: 'Peano.exists_countable_weq' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_homotopyEquiv_arcReduced,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_countable_weq
+/--
+info: 'Peano.injOn_wildSet' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.injOn_wildSet
+/--
+info: 'Peano.exists_countable_weq_iff' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_homotopyEquiv_arcReduced,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_countable_weq_iff
+/--
+info: 'Peano.countable_wildSet_of_weq' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.countable_wildSet_of_weq
+/--
+info: 'Peano.exists_countable_weq_iff_loopWildSet' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_homotopyEquiv_arcReduced,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_countable_weq_iff_loopWildSet
+/--
+info: 'Peano.exists_finite_weq_of_loopWildSet_eq_empty' depends on axioms: [propext,
+ Classical.choice,
+ exists_homotopyEquiv_arcReduced,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_finite_weq_of_loopWildSet_eq_empty

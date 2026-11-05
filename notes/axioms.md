@@ -1,8 +1,9 @@
 # Axioms of the `Peano` formalisation (audit table)
 
-Every axiom is in `Peano/Axioms/`, and `Peano/Audit/Axioms.lean` prints each one in full. Check that
+Every axiom is in `Peano/Axioms/`, and `Peano/Audit/Axioms.lean` records each one in full
+(under `#guard_msgs`, so the build fails if a statement changes). Check that
 none exists elsewhere with `grep -rn '^axiom' Peano`. The "used by" column comes from the
-`#print axioms` lines in `Peano/Audit/*.lean`. Adversarial reviews: `checks/axioms-review.md`
+`#guard_msgs in #print axioms` blocks in `Peano/Audit/*.lean`. Adversarial reviews: `checks/axioms-review.md`
 (first set) and `checks/reviews-2026-11-05.md`.
 
 Wild sets. The paper's Definition 2.2 (`wildSet`, through fully essential maps from the earring) and

@@ -22,8 +22,9 @@ equivalent to a countable space if and only if its wild set is countable.
   - `checks/`: adversarial proof checks and reviews.
   - `axioms.md`: the trust boundary.
   - `lean-map.md`: paper result ↔ Lean declaration.
-- `Peano/`: the Lean library. `Peano/Axioms/` holds every axiom (results cited by the paper, and one
-  textbook fact). `Peano/Audit/` restates the key statements with `recall` and prints their axioms.
+- `Peano/`: the main Lean library. `Peano/Axioms/` holds its axioms (all results cited by the
+  paper). `Peano/Audit/` restates the key statements with `recall` and checks their axioms with
+  `#guard_msgs`.
 - `papers/` (gitignored, so absent from a fresh clone): the paper and the cited preprints. The paper
   is at <https://arxiv.org/abs/2610.35875>.
 
@@ -43,9 +44,10 @@ lake build           # both libraries and their audit files
 ```
 
 Two libraries: `Peano` (Theorems 1.1 and 1.2 and everything they need) and `PeanoPartA` (§2–3 of
-the paper and its own proof of Lemma 6.4), each with its own axioms. The build prints the axioms each
-key theorem depends on (`Peano/Audit/`, `PeanoPartA/Audit.lean`). Compare them with
-`notes/axioms.md`, which lists every axiom and where it comes from.
+the paper and its own proof of Lemma 6.4), each with its own axioms. The audit files
+(`Peano/Audit/`, `PeanoPartA/Audit.lean`) record, under `#guard_msgs`, the axioms each key
+theorem depends on; the build fails if any list changes, and is otherwise silent. Compare
+them with `notes/axioms.md`, which lists every axiom and where it comes from.
 
 ## Status
 

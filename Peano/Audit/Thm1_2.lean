@@ -65,15 +65,77 @@ recall Peano.exists_wildSet_homeomorph (K : Type) [MetricSpace K] [CompactSpace 
 recall Peano.compactSpace_wildSet (X : Type*) [MetricSpace X] [CompactSpace X]
     [LocallyPathConnectedSpace X] : CompactSpace (wildSet X)
 
+/--
+info: 'Peano.compactSpace_wildSet' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.compactSpace_wildSet
+/--
+info: 'Peano.nonempty_homeomorph_wildSet' depends on axioms: [propext, Classical.choice, exists_nhds_monodromy, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.nonempty_homeomorph_wildSet
+/--
+info: 'Peano.HomotopyEquiv.wildSetHomeomorph' depends on axioms: [propext,
+ Classical.choice,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.HomotopyEquiv.wildSetHomeomorph
+/--
+info: 'Peano.nonempty_homotopyEquiv_iff' depends on axioms: [propext,
+ Classical.choice,
+ eda_homotopyEquiv_of_homeomorph,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.nonempty_homotopyEquiv_iff
+/--
+info: 'Peano.nonempty_homotopyEquiv_iff_of_weq' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ eda_homotopyEquiv_of_homeomorph,
+ exists_homotopyEquiv_arcReduced,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.nonempty_homotopyEquiv_iff_of_weq
+/--
+info: 'Peano.exists_wildSet_homeomorph' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.exists_wildSet_homeomorph
 
 -- Brazas–Fischer (Peano/BrazasFischer.lean): Lemma 9.17 / Cor 9.18 and the strong form of Thm 9.15.
+/--
+info: @apply_eq_of_homotopic_id : ∀ {X : Type} [inst : MetricSpace X] [PathConnectedSpace X],
+  CoveringDimLE 1 X → ∀ {h : C(X, X)}, h.Homotopic (ContinuousMap.id X) → ∀ {x : X}, x ∈ loopWildSet X → h x = x
+-/
+#guard_msgs in
 #check @Peano.apply_eq_of_homotopic_id
+/--
+info: @HomotopyEquiv.loopWildSetHomeomorph : {X Y : Type} →
+  [inst : MetricSpace X] →
+    [PathConnectedSpace X] →
+      [inst_2 : MetricSpace Y] →
+        [PathConnectedSpace Y] →
+          CoveringDimLE 1 X → CoveringDimLE 1 Y → ContinuousMap.HomotopyEquiv X Y → ↑(loopWildSet X) ≃ₜ ↑(loopWildSet Y)
+-/
+#guard_msgs in
 #check @Peano.HomotopyEquiv.loopWildSetHomeomorph
+/--
+info: 'Peano.apply_eq_of_homotopic_id' depends on axioms: [propext, Classical.choice, exists_nhds_monodromy, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.apply_eq_of_homotopic_id
+/--
+info: 'Peano.HomotopyEquiv.loopWildSetHomeomorph' depends on axioms: [propext,
+ Classical.choice,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.HomotopyEquiv.loopWildSetHomeomorph

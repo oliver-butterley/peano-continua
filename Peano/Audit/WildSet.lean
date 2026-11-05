@@ -37,9 +37,37 @@ recall Peano.mk_wildSet_le (X : Type) [MetricSpace X] [CompactSpace X] [Connecte
     {f : C(X, Y)} (hf : ∀ x, Function.Bijective (FundamentalGroup.map f x)) :
     Cardinal.mk (wildSet X) ≤ Cardinal.mk (wildSet Y)
 
+/--
+info: 'Peano.wildSet_eq_loopWildSet' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.wildSet_eq_loopWildSet
+/--
+info: 'Peano.isClosed_wildSet' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.isClosed_wildSet
+/--
+info: 'Peano.image_wildSet_subset' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.image_wildSet_subset
+/--
+info: 'Peano.earringBase_mem_wildSet' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.earringBase_mem_wildSet
+/--
+info: 'Peano.eq_of_homotopic_conj' depends on axioms: [propext, Classical.choice, exists_nhds_monodromy, Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.eq_of_homotopic_conj
+/--
+info: 'Peano.mk_wildSet_le' depends on axioms: [propext,
+ Classical.choice,
+ eda_exists_map_earring,
+ exists_nhds_monodromy,
+ Quot.sound]
+-/
+#guard_msgs in
 #print axioms Peano.mk_wildSet_le
