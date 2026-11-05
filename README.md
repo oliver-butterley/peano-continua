@@ -1,5 +1,12 @@
 # peano-continua
 
+
+⚠️ This paragraph is the only part of this entire repo which was contributed by a human. 
+All other content was added by AI as a quick experiment during a discussion. 
+There was not even an attempt (so far) to review any of the material produced.
+
+
+
 This repository checks and formalises in Lean 4 the paper by Jeremy Brazas and Petar Pavešić,
 *Countable models of one-dimensional Peano continua* (arXiv:2610.35875, v1, 10 Aug 2026).
 
