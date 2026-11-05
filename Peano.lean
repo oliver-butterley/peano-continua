@@ -14,6 +14,6 @@ public import Peano.Main
 
 Formalisation of the core of Brazas–Pavešić, *Countable models of one-dimensional Peano
 continua* (arXiv:2610.35875): §4–§5 and the "if" direction of Theorem 1.1. Notes, checks and the
-lemma map are in `notes/`. The audit files `Peano/Audit/*.lean` are not imported here; build them
-with `lake build Peano.Audit.<Name>`.
+lemma map are in `notes/`. The audit files `Peano/Audit/*.lean` are not imported here; `lake build`
+builds them anyway (see the `globs` in `lakefile.toml`).
 -/

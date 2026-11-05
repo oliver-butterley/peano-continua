@@ -17,20 +17,21 @@ equivalent to a countable space if and only if its wild set is countable.
   - `lean-map.md`: paper result ↔ Lean declaration.
 - `Peano/`: the Lean library. `Peano/Axioms/` holds every axiom (results cited by the paper, and one
   textbook fact). `Peano/Audit/` restates the key statements with `recall` and prints their axioms.
-- `papers/` (gitignored): the paper and the cited preprints, with `pdftotext` versions.
+- `papers/` (gitignored, so absent from a fresh clone): the paper and the cited preprints. The paper
+  is at <https://arxiv.org/abs/2610.35875>.
 
 ## Building
 
-The toolchain is `leanprover/lean4:v4.35.0` and Mathlib is pinned at `v4.35.0`.
+You need [elan](https://github.com/leanprover/elan); it picks up the toolchain
+(`leanprover/lean4:v4.35.0`) from `lean-toolchain`. Mathlib is pinned at `v4.35.0`.
 
 ```
-lake exe cache get
-scripts/build.sh Peano
-scripts/build.sh Peano.Audit.Thm1_1 Peano.Audit.Cor5_6 Peano.Audit.Lemma4_5 Peano.Audit.Axioms
+lake exe cache get   # download prebuilt Mathlib instead of compiling it
+lake build           # the library and the audit files
 ```
 
-`scripts/build.sh` runs a low-impact `lake build` with 2 threads, `nice`/`ionice` and an 8 GB
-memory cap.
+The build prints the axioms each key theorem depends on (from `Peano/Audit/`). Compare them with
+`notes/axioms.md`, which lists every axiom and where it comes from.
 
 ## Status
 

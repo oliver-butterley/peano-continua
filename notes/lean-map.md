@@ -1,6 +1,6 @@
 # Lemma map: paper ↔ Lean
 
-The Lean code is the `Peano` library (`Peano/`), built with `scripts/build.sh Peano`. Axioms are
+The Lean code is the `Peano` library (`Peano/`), built with `lake build`. Axioms are
 listed in `axioms.md`.
 
 Status:

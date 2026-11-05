@@ -18,9 +18,9 @@ countable space if and only if its wild set is countable.
 | `axioms.md` | The audit table of every axiom (the trust boundary) |
 | `lean-map.md` | Paper result ↔ Lean declaration ↔ status ↔ axioms |
 
-The Lean code is in `../Peano/` (library `Peano`; build it with `scripts/build.sh Peano`). The
-audit files `../Peano/Audit/*.lean` restate the key statements with `recall` and print their
-axioms. Build them with `scripts/build.sh Peano.Audit.Thm1_1` and so on.
+The Lean code is in `../Peano/` (library `Peano`; `lake build` builds it). The audit files
+`../Peano/Audit/*.lean` restate the key statements with `recall` and print their axioms; `lake build`
+builds them too.
 
 ## Findings of the checks
 

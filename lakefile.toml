@@ -13,3 +13,5 @@ rev = "v4.35.0"
 # Brazas–Pavešić, countable models of one-dimensional Peano continua (notes in `notes/`).
 [[lean_lib]]
 name = "Peano"
+# Also build the audit files `Peano/Audit/*.lean`, which `Peano.lean` does not import.
+globs = ["Peano.+"]

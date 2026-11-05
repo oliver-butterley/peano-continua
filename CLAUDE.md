@@ -8,12 +8,12 @@ is in `notes/lean-map.md`; the axioms are in `notes/axioms.md`.
 
 - Toolchain `leanprover/lean4:v4.35.0`, Mathlib tag `v4.35.0`, `autoImplicit = false`. A fresh
   checkout needs `lake exe cache get`.
-- Build with `scripts/build.sh` (a low-impact `lake build`: 2 threads, `nice`/`ionice`, 8 GB memory
-  cap; arguments are passed to `lake build`). Run **one build at a time**.
+- `lake build` builds the library and the audit files. On this machine (15 GB, shared) run it low-impact:
+  `nice -n 19 ionice -c3 env LEAN_NUM_THREADS=2 lake build`. Run **one build at a time**.
 - Parallel Lean agents are allowed, two or three at a time. Rules:
   - start `scripts/lean_watchdog.sh 2500 1200 10` in the background first;
   - each agent edits only its own file and checks its work through the MCP diagnostics;
-  - only the orchestrator runs `scripts/build.sh`, between waves.
+  - only the orchestrator runs `lake build`, between waves.
 - Mathlib naming conventions; a docstring on every definition and theorem; a module header that
   states the informal meaning of the file and the design choices behind the encodings.
 - Axioms live only in `Peano/Axioms/` (`Cited.lean` for results the paper cites, `Standard.lean`
