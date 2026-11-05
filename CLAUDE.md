@@ -8,8 +8,7 @@ is in `notes/lean-map.md`; the axioms are in `notes/axioms.md`.
 
 - Toolchain `leanprover/lean4:v4.35.0`, Mathlib tag `v4.35.0`, `autoImplicit = false`. A fresh
   checkout needs `lake exe cache get`.
-- `lake build` builds the library and the audit files. On this machine (15 GB, shared) run it low-impact:
-  `nice -n 19 ionice -c3 env LEAN_NUM_THREADS=2 lake build`. Run **one build at a time**.
+- `lake build` builds the library and the audit files.
 - Parallel Lean agents are allowed, two or three at a time. Rules:
   - start `scripts/lean_watchdog.sh 2500 1200 10` in the background first;
   - each agent edits only its own file and checks its work through the MCP diagnostics;
