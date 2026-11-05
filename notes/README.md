@@ -80,3 +80,59 @@ repaired arguments of `checks/B.md` and `checks/C.md`, with two simplifications:
   property.
 
 The standard-form layer of Theorem 1.1 does not use one-dimensionality.
+
+**Not formalised** (checked informally only, in `checks/A.md` and `checks/D.md`):
+- Part A (§2–3: Lemmas 2.5, 2.8, 3.3, 3.4);
+- Lemmas 6.3 and 6.4;
+- the "only if" direction of Theorem 1.1;
+- Theorem 1.2;
+- the case `w(X) = ∅` of Theorem 1.1 ("if"), which the paper also misses.
+
+## Assessment and caveats (end of formalisation, 2026-10-28)
+
+**Verdict.** The main theorem is true, apart from the case `w(X) = ∅`, which the paper misses but
+which follows easily from McCord's theorem.
+- The new technical core (§5, the coarsification and its lifting lemma) is correct as stated, and
+  is now machine-checked from the standard axioms only.
+- Several proofs needed repairs, but every repaired argument went through in Lean without surprises.
+- Theorem 1.2 is false as stated, and true once restricted to non-empty wild sets.
+
+**A misleading claim in `checks/C.md`.** It says Lemma 4.5 is false. That checker read the text
+extraction, which drops the closure bars. The PDF has closed arcs `Ōₙ` in conditions (2) and (3),
+and with closures the lemma is true: it is proved in Lean as
+`Peano.ArcSystem.isOpen_iff_localCondition`. Its counterexample applies only to the misread
+version. (`checks/B.md` and `checks/definitions-review.md` read the closures correctly.)
+
+**A near miss on the axioms.** The first Lean version of the Theorem 4.2 axiom, written from the
+paper's statement, was inconsistent: a point satisfies its hypotheses but cannot be homotopy
+equivalent to a standard-form space. The Part B check caught this before any proof depended on it
+(see `axioms.md`).
+
+**Sources that nobody inspected.** Claims resting on these come from secondary sources or memory:
+- Meilstrup's thesis (the download was blocked). Theorem 4.2 was checked against the restatement in
+  Brazas–Pavešić arXiv:2510.22901, Thm 3.10.
+- The full texts of Eda 2002 (Theorem 6.1), Eda 2016 (zero-form lemma) and Eda 2022 (Theorem 6.6).
+  For Eda 2022 only the abstract was seen; it is the source of the missing word "non-empty".
+- Cannon–Conner 2006 (Remark 2.7, Lemma 2.8).
+
+The three cited axioms that the formalisation does use were checked against Brazas–Mitra
+(arXiv:2505.23665, Prop. 2.9), Brazas–Fischer (arXiv:1902.08887v2, Thm 9.15 with Prop. 9.13) and
+the Meilstrup restatement above. Copies are in `papers/`.
+
+**Lean caveats.**
+- Statements were frozen with the paper's hypotheses, some of which the proofs do not use. Lean
+  reports them as unused:
+  - `hdim` (one-dimensionality) in `exists_countable_weq_of_standardForm`;
+  - the instances `[CompactSpace X] [LocallyPathConnectedSpace X]` in `isOpenMap_q`,
+    `countable_coarse` and `exists_lift`.
+
+  They were kept, so that the statements match the paper and the audit files.
+- `Lemma 5.4′` (`exists_extension_interior`) is not in the paper. It is the strengthened extension
+  lemma that the repaired proof of Lemma 5.5 needs.
+- The weak-equivalence definition asks for bijections on `π₀` and on `πₙ`, `n ≥ 1`. The group
+  homomorphism property is automatic and is not stated.
+- No audit file restates the generic theorems of `Peano/WeakEquiv.lean` (lifting for cubes ⇒ Serre
+  fibration and weak equivalence; composition). They are covered only through Corollary 5.6.
+
+**Open questions.** See `novelty.md`, "Open questions about novelty". The most interesting is the
+unreviewed suggestion that Lemma 6.4 has a proof without homology.
